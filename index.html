@@ -1,0 +1,3642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Developer Toolkit – All-in-One Dev Tools</title>
+    <meta name="description" content="Developer Toolkit is a complete offline-ready suite of developer tools including JSON formatter, QR generator, playground, converters, and more.">
+    <meta name="keywords" content="developer tools, json formatter, qr generator, code playground, text tools, color tools, base64, image converter, offline tools">
+    <meta property="og:title" content="Developer Toolkit">
+    <meta property="og:description" content="All-in-one developer productivity tools – JSON formatter, QR generator, playground, converters & more.">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="manifest" href="data:application/json,{}">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' rx='20' fill='%230f172a'/%3E%3Cg fill='none' stroke-width='14' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M65 50 L65 150 L95 150 C125 150 135 130 135 100 C135 70 125 50 95 50 Z' stroke='%2338bdf8'/%3E%3Cpath d='M100 50 L100 150' stroke='%2338bdf8'/%3E%3Cpath d='M100 90 L135 50' stroke='%23fb7185'/%3E%3Cpath d='M100 110 L135 150' stroke='%23fb7185'/%3E%3C/g%3E%3C/svg%3E" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' rx='20' fill='%230f172a'/%3E%3Cg fill='none' stroke-width='14' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M65 50 L65 150 L95 150 C125 150 135 130 135 100 C135 70 125 50 95 50 Z' stroke='%2338bdf8'/%3E%3Cpath d='M100 50 L100 150' stroke='%2338bdf8'/%3E%3Cpath d='M100 90 L135 50' stroke='%23fb7185'/%3E%3Cpath d='M100 110 L135 150' stroke='%23fb7185'/%3E%3C/g%3E%3C/svg%3E">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ─── CSS Reset & Variables ─── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        :root {
+            --bg-primary: #f1f5f9;
+            --bg-secondary: #ffffff;
+            --bg-sidebar: #0f172a;
+            --bg-card: #ffffff;
+            --bg-input: #f8fafc;
+            --bg-hover: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --text-inverse: #f8fafc;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.10);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 0.25s ease;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --sidebar-width: 260px;
+            --header-height: 64px;
+            --carousel-height: 200px;
+        }
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --bg-input: #0f172a;
+            --bg-hover: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border-color: #334155;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background var(--transition), color var(--transition);
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        button {
+            cursor: pointer;
+            font-family: var(--font);
+            border: none;
+            background: none;
+            color: inherit;
+            font-size: 0.9rem;
+        }
+        textarea,
+        input,
+        select {
+            font-family: var(--font);
+            font-size: 0.9rem;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            transition: border var(--transition), box-shadow var(--transition);
+            width: 100%;
+            outline: none;
+        }
+        textarea:focus,
+        input:focus,
+        select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            tab-size: 2;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-muted);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        /* ─── Sidebar ─── */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--bg-sidebar);
+            color: #cbd5e1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 1000;
+            padding: 0 0 20px 0;
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            flex-shrink: 0;
+        }
+        .sidebar-brand svg {
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+        }
+        .sidebar-brand span {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #f8fafc;
+            letter-spacing: -0.5px;
+        }
+        .sidebar-brand small {
+            font-size: 0.65rem;
+            color: #94a3b8;
+            font-weight: 400;
+            display: block;
+            margin-top: -2px;
+        }
+        .sidebar-nav {
+            flex: 1;
+            padding: 12px 0;
+            overflow-y: auto;
+        }
+        .sidebar-nav .nav-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #64748b;
+            padding: 12px 20px 6px;
+            font-weight: 600;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 20px;
+            color: #cbd5e1;
+            transition: all 0.15s ease;
+            border-left: 3px solid transparent;
+            font-size: 0.88rem;
+            cursor: pointer;
+            text-decoration: none;
+            border-radius: 0 6px 6px 0;
+            margin: 1px 8px 1px 0;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #f8fafc;
+            border-left-color: var(--accent);
+        }
+        .sidebar-nav a.active {
+            background: rgba(59, 130, 246, 0.15);
+            color: #f8fafc;
+            border-left-color: var(--accent);
+        }
+        .sidebar-nav a i {
+            width: 20px;
+            text-align: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .sidebar-nav a .badge {
+            margin-left: auto;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1px 10px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            color: #94a3b8;
+        }
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 0.7rem;
+            color: #64748b;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .sidebar-footer a {
+            color: #94a3b8;
+        }
+
+        /* ─── Main Content ─── */
+        .main {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .topbar {
+            height: var(--header-height);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background var(--transition), border var(--transition);
+            gap: 16px;
+        }
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .topbar-left .menu-toggle {
+            display: none;
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            transition: background 0.2s;
+        }
+        .topbar-left .menu-toggle:hover {
+            background: var(--bg-hover);
+        }
+        .topbar-left .page-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .topbar-right .icon-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            transition: background 0.2s, color 0.2s;
+            background: transparent;
+            border: none;
+        }
+        .topbar-right .icon-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        .topbar-right .install-btn {
+            padding: 6px 16px;
+            border-radius: 20px;
+            background: var(--accent);
+            color: #fff;
+            font-weight: 500;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+        .topbar-right .install-btn:hover {
+            background: var(--accent-hover);
+        }
+        .topbar-right .theme-toggle {
+            font-size: 1.1rem;
+        }
+
+        /* ─── Content Area ─── */
+        .content {
+            padding: 28px 32px 60px;
+            flex: 1;
+        }
+        .page-section {
+            display: none;
+            animation: fadeUp 0.35s ease;
+        }
+        .page-section.active {
+            display: block;
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ─── Cards & Grid ─── */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: background var(--transition), border var(--transition), box-shadow var(--transition);
+            margin-bottom: 24px;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-title i {
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+        }
+        .tool-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 20px 18px;
+            text-align: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--accent);
+        }
+        .tool-card i {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+            display: block;
+        }
+        .tool-card h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        .tool-card p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ─── Buttons ─── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 20px;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            font-size: 0.88rem;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        .btn:hover {
+            background: var(--border-color);
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            color: #fff;
+        }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-success:hover {
+            background: #16a34a;
+            color: #fff;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background: #dc2626;
+            color: #fff;
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: #fff;
+        }
+        .btn-warning:hover {
+            background: #d97706;
+            color: #fff;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+        }
+        .btn-outline:hover {
+            background: var(--bg-hover);
+        }
+        .btn-sm {
+            padding: 5px 14px;
+            font-size: 0.78rem;
+        }
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 0 4px;
+        }
+
+        /* ─── Form elements ─── */
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+        .form-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: end;
+        }
+        .form-row .form-group {
+            flex: 1;
+            min-width: 140px;
+            margin-bottom: 0;
+        }
+
+        /* ─── Playground ─── */
+        .playground-editors {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+        .playground-editors .editor-wrap {
+            background: var(--bg-input);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+        .playground-editors .editor-wrap .editor-label {
+            padding: 6px 14px;
+            background: var(--bg-hover);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .playground-editors .editor-wrap textarea {
+            border: none;
+            border-radius: 0;
+            min-height: 200px;
+            font-size: 0.8rem;
+            padding: 12px;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            resize: vertical;
+        }
+        .playground-editors .editor-wrap textarea:focus {
+            box-shadow: none;
+        }
+        .playground-preview {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            min-height: 200px;
+            padding: 16px;
+            margin-top: 16px;
+            color: #0f172a;
+            overflow: auto;
+        }
+        [data-theme="dark"] .playground-preview {
+            background: #1e293b;
+            color: #f1f5f9;
+        }
+
+        /* ─── QR / Image / Base64 ─── */
+        .qr-output,
+        .base64-output {
+            text-align: center;
+            padding: 20px;
+            background: var(--bg-input);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .qr-output canvas,
+        .qr-output img {
+            max-width: 200px;
+            height: auto;
+        }
+        .preview-img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+        }
+        .file-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 8px 0;
+        }
+        .file-info span {
+            background: var(--bg-input);
+            padding: 4px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        /* ─── Snippets ─── */
+        .snippet-item {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .snippet-item .snippet-info {
+            flex: 1;
+            min-width: 150px;
+        }
+        .snippet-item .snippet-info h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        .snippet-item .snippet-info p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin: 2px 0;
+        }
+        .snippet-item .snippet-info code {
+            display: block;
+            background: var(--bg-card);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.78rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin-top: 6px;
+            border: 1px solid var(--border-color);
+            max-height: 100px;
+            overflow-y: auto;
+        }
+        .snippet-item .snippet-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        /* ─── Notifications ─── */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 380px;
+            width: 100%;
+        }
+        .toast {
+            padding: 14px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-hover);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideUp 0.3s ease;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        .toast.info {
+            border-left: 4px solid var(--accent);
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ─── Cookie Banner ─── */
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            padding: 18px 28px;
+            z-index: 9998;
+            box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .cookie-banner p {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            flex: 1;
+            min-width: 200px;
+            margin: 0;
+        }
+        .cookie-banner .btn-group {
+            margin: 0;
+        }
+
+        /* ─── Search ─── */
+        .global-search {
+            position: relative;
+            flex: 1;
+            max-width: 360px;
+        }
+        .global-search input {
+            padding-left: 36px;
+            height: 38px;
+            font-size: 0.85rem;
+            border-radius: 20px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            width: 100%;
+        }
+        .global-search input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+        .global-search i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ─── Carousel ─── */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: var(--carousel-height);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            margin: 0;
+            touch-action: pan-y;
+        }
+        .carousel-track {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform;
+        }
+        .carousel-slide {
+            flex: 0 0 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: var(--bg-input);
+        }
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            color: #fff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.25s ease, transform 0.2s ease, opacity 0.25s ease;
+            opacity: 0;
+            z-index: 10;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+        }
+        .carousel-btn:hover {
+            background: rgba(15, 23, 42, 0.8);
+            transform: translateY(-50%) scale(1.05);
+        }
+        .carousel-container:hover .carousel-btn,
+        .carousel-container.touch-active .carousel-btn {
+            opacity: 0.9;
+        }
+        .carousel-btn:active {
+            transform: translateY(-50%) scale(0.92);
+        }
+        .carousel-prev {
+            left: 12px;
+        }
+        .carousel-next {
+            right: 12px;
+        }
+        .carousel-dots {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+            background: rgba(15, 23, 42, 0.3);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+            border: none;
+            padding: 0;
+        }
+        .carousel-dot.active {
+            background: #fff;
+            transform: scale(1.2);
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+        }
+        .carousel-dot:hover {
+            background: rgba(255, 255, 255, 0.7);
+        }
+        .carousel-dot.active:hover {
+            background: #fff;
+        }
+
+        /* Carousel responsive */
+        @media (max-width: 768px) {
+            :root {
+                --carousel-height: 160px;
+            }
+            .carousel-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+                opacity: 0.7;
+            }
+            .carousel-container:hover .carousel-btn {
+                opacity: 0.7;
+            }
+            .carousel-prev {
+                left: 6px;
+            }
+            .carousel-next {
+                right: 6px;
+            }
+            .carousel-dots {
+                bottom: 8px;
+                gap: 6px;
+                padding: 4px 10px;
+            }
+            .carousel-dot {
+                width: 8px;
+                height: 8px;
+            }
+        }
+        @media (max-width: 480px) {
+            :root {
+                --carousel-height: 130px;
+            }
+            .carousel-btn {
+                width: 26px;
+                height: 26px;
+                font-size: 0.65rem;
+                opacity: 0.6;
+            }
+            .carousel-dot {
+                width: 6px;
+                height: 6px;
+            }
+        }
+
+        /* Ad space wrapper for carousel */
+        .ad-space {
+            background: var(--bg-input);
+            border: 1px dashed var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin: 20px 0;
+            min-height: var(--carousel-height);
+            overflow: hidden;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .ad-space:hover {
+            border-color: var(--accent);
+            opacity: 1;
+        }
+        .ad-space.sidebar-ad {
+            margin: 16px 12px;
+            min-height: 120px;
+            padding: 0;
+            border-radius: var(--radius);
+        }
+        .ad-space.footer-ad {
+            margin: 24px 0 8px;
+        }
+        .ad-space .carousel-container {
+            border: none;
+            border-radius: 0;
+            margin: 0;
+            box-shadow: none;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 1024px) {
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .playground-editors {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main {
+                margin-left: 0;
+            }
+            .topbar-left .menu-toggle {
+                display: flex;
+            }
+            .topbar {
+                padding: 0 16px;
+            }
+            .content {
+                padding: 16px 16px 40px;
+            }
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .playground-editors {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                flex-direction: column;
+            }
+            .form-row .form-group {
+                min-width: auto;
+            }
+            .global-search {
+                max-width: 160px;
+            }
+            .cookie-banner {
+                flex-direction: column;
+                text-align: center;
+                padding: 16px;
+            }
+            .tool-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .topbar-right .install-btn span {
+                display: none;
+            }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.4);
+                z-index: 999;
+            }
+            .sidebar-overlay.show {
+                display: block;
+            }
+            .toast-container {
+                bottom: 12px;
+                right: 12px;
+                max-width: calc(100% - 24px);
+            }
+        }
+        @media (max-width: 480px) {
+            .tool-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .card {
+                padding: 16px;
+            }
+            .topbar-left .page-title {
+                font-size: 0.9rem;
+            }
+            .global-search {
+                max-width: 120px;
+            }
+            .global-search input {
+                font-size: 0.75rem;
+                padding-left: 30px;
+                height: 32px;
+            }
+        }
+
+        /* ─── Misc ─── */
+        .flex {
+            display: flex;
+        }
+        .flex-center {
+            align-items: center;
+            justify-content: center;
+        }
+        .gap-8 {
+            gap: 8px;
+        }
+        .gap-12 {
+            gap: 12px;
+        }
+        .gap-16 {
+            gap: 16px;
+        }
+        .mt-8 {
+            margin-top: 8px;
+        }
+        .mt-16 {
+            margin-top: 16px;
+        }
+        .mb-16 {
+            margin-bottom: 16px;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .text-muted {
+            color: var(--text-muted);
+        }
+        .text-sm {
+            font-size: 0.82rem;
+        }
+        .w-full {
+            width: 100%;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .chip {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 20px;
+            background: var(--bg-hover);
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+        .empty-state i {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            opacity: 0.4;
+        }
+
+        /* Scrollable tabs inside tools */
+        .tab-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+        .tab-bar .tab-btn {
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+        .tab-bar .tab-btn:hover {
+            background: var(--bg-hover);
+        }
+        .tab-bar .tab-btn.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        .tab-pane {
+            display: none;
+            animation: fadeUp 0.25s ease;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* color picker */
+        .color-picker-wrap {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .color-picker-wrap input[type="color"] {
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 2px;
+            background: none;
+            cursor: pointer;
+        }
+        .color-picker-wrap input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        .color-picker-wrap input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: 4px;
+        }
+
+        /* gradient */
+        .gradient-preview {
+            width: 100%;
+            height: 80px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            margin: 8px 0;
+        }
+
+        /* palette */
+        .palette-swatch {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin: 8px 0;
+        }
+        .palette-swatch .swatch {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .palette-swatch .swatch:hover {
+            transform: scale(1.08);
+        }
+        .palette-swatch .swatch .hex-label {
+            font-size: 0.6rem;
+            text-align: center;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* diff */
+        .diff-output {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .diff-output pre {
+            background: var(--bg-input);
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            font-size: 0.78rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 0;
+        }
+        .diff-output .diff-added {
+            background: rgba(34, 197, 94, 0.12);
+            border-left: 3px solid var(--success);
+        }
+        .diff-output .diff-removed {
+            background: rgba(239, 68, 68, 0.12);
+            border-left: 3px solid var(--danger);
+        }
+
+        /* loading shimmer */
+        .shimmer {
+            background: linear-gradient(90deg, var(--bg-hover) 25%, var(--bg-card) 50%, var(--bg-hover) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: var(--radius-sm);
+        }
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ─── Sidebar Overlay ─── -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ─── Sidebar ─── -->
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+        <div class="sidebar-brand">
+            <svg width="40" height="40" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+                <rect width="200" height="200" rx="20" fill="#0f172a"/>
+                <g fill="none" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M65 50 L65 150 L95 150 C125 150 135 130 135 100 C135 70 125 50 95 50 Z" stroke="#38bdf8"/>
+                    <path d="M100 50 L100 150" stroke="#38bdf8"/>
+                    <path d="M100 90 L135 50" stroke="#fb7185"/>
+                    <path d="M100 110 L135 150" stroke="#fb7185"/>
+                </g>
+            </svg>
+            <div>
+                <span>DevKit</span>
+                <small>Toolbox</small>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-label">Main</div>
+            <a class="active" data-page="dashboard"><i class="fas fa-th-large"></i> Dashboard</a>
+            <a data-page="search"><i class="fas fa-search"></i> Search Tools</a>
+
+            <div class="nav-label">Code</div>
+            <a data-page="json"><i class="fas fa-brackets-curly"></i> JSON Formatter</a>
+            <a data-page="playground"><i class="fas fa-code"></i> Playground</a>
+            <a data-page="formatters"><i class="fas fa-indent"></i> Code Formatters</a>
+            <a data-page="minifiers"><i class="fas fa-compress"></i> Code Minifiers</a>
+
+            <div class="nav-label">Converters</div>
+            <a data-page="converters"><i class="fas fa-arrows-turn-to-dots"></i> Converters</a>
+
+            <div class="nav-label">Generators</div>
+            <a data-page="qr"><i class="fas fa-qrcode"></i> QR Generator</a>
+            <a data-page="utilities"><i class="fas fa-wand-magic-sparkles"></i> Utilities</a>
+
+            <div class="nav-label">Text</div>
+            <a data-page="text"><i class="fas fa-font"></i> Text Tools</a>
+
+            <div class="nav-label">Images</div>
+            <a data-page="image"><i class="fas fa-image"></i> Image Converter</a>
+            <a data-page="base64"><i class="fas fa-file-image"></i> Image to Base64</a>
+
+            <div class="nav-label">Colors</div>
+            <a data-page="colors"><i class="fas fa-palette"></i> Color Tools</a>
+
+            <div class="nav-label">Calculators</div>
+            <a data-page="calculators"><i class="fas fa-calculator"></i> Calculators</a>
+
+            <div class="nav-label">Testing</div>
+            <a data-page="testing"><i class="fas fa-flask"></i> Testing Tools</a>
+
+            <div class="nav-label">Learning</div>
+            <a data-page="learn"><i class="fas fa-graduation-cap"></i> Learn</a>
+
+            <div class="nav-label">Storage</div>
+            <a data-page="snippets"><i class="fas fa-puzzle-piece"></i> Snippets</a>
+            <a data-page="favorites"><i class="fas fa-star"></i> Favorites</a>
+            <a data-page="history"><i class="fas fa-clock-rotate-left"></i> History</a>
+
+            <div class="nav-label">Profile</div>
+            <a data-page="profile"><i class="fas fa-user"></i> Profile</a>
+            <a data-page="analytics"><i class="fas fa-chart-simple"></i> Analytics</a>
+
+            <div class="nav-label">Info</div>
+            <a data-page="about"><i class="fas fa-circle-info"></i> About</a>
+            <a data-page="contact"><i class="fas fa-envelope"></i> Contact</a>
+        </nav>
+        <div class="sidebar-footer">
+            <span>v2.0</span> &middot; <a href="https://websolutionsza.github.io/websolutionsSA/" target="_blank" rel="noopener">WebsolutionsSA</a>
+        </div>
+    </aside>
+
+    <!-- ─── Main ─── -->
+    <div class="main" id="mainContent">
+        <!-- Topbar -->
+        <header class="topbar" role="banner">
+            <div class="topbar-left">
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation"><i class="fas fa-bars"></i></button>
+                <span class="page-title" id="pageTitle">Dashboard</span>
+            </div>
+            <div class="topbar-right">
+                <div class="global-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="globalSearchInput" placeholder="Search tools..." aria-label="Search tools">
+                </div>
+                <button class="icon-btn theme-toggle" id="themeToggle" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+                <button class="install-btn" id="installBtn" aria-label="Install app"><i class="fas fa-download"></i> <span>Install</span></button>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="content" id="contentArea" role="main">
+            <!-- All pages rendered by JavaScript -->
+            <div id="pageContainer"></div>
+        </main>
+    </div>
+
+    <!-- ─── Toast Container ─── -->
+    <div class="toast-container" id="toastContainer" role="status" aria-live="polite"></div>
+
+    <!-- ─── Cookie Banner ─── -->
+    <div class="cookie-banner" id="cookieBanner" role="alert">
+        <p><i class="fas fa-cookie" style="margin-right:8px;"></i> We use cookies to improve your experience. By using this site, you agree to our use of cookies.</p>
+        <div class="btn-group">
+            <button class="btn btn-primary btn-sm" id="cookieAccept">Accept</button>
+            <button class="btn btn-outline btn-sm" id="cookieDecline">Decline</button>
+        </div>
+    </div>
+
+    <script>
+        /* ───────────────────────────────────────────────────────────────
+               FULL APPLICATION JAVASCRIPT
+               ─────────────────────────────────────────────────────────────── */
+
+        (function() {
+            'use strict';
+
+            // ─── State ───
+            const state = {
+                currentPage: 'dashboard',
+                theme: localStorage.getItem('devkit-theme') || 'light',
+                favorites: JSON.parse(localStorage.getItem('devkit-favorites') || '[]'),
+                history: JSON.parse(localStorage.getItem('devkit-history') || '[]'),
+                snippets: JSON.parse(localStorage.getItem('devkit-snippets') || '[]'),
+                profile: JSON.parse(localStorage.getItem('devkit-profile') || '{"username":"Developer","favorites":[],"stats":{}}'),
+                analytics: JSON.parse(localStorage.getItem('devkit-analytics') || '{"uses":{},"favorite":null,"total":0,"time":0}'),
+                cookieConsent: localStorage.getItem('devkit-cookie-consent') || null,
+                lastActive: Date.now()
+            };
+
+            // ─── Carousel Images ───
+            const CAROUSEL_IMAGES = [
+                'https://raw.githubusercontent.com/websolutionsza/Developer-Toolkit-MVP/refs/heads/main/1st%20slide.jpeg',
+                'https://raw.githubusercontent.com/websolutionsza/Developer-Toolkit-MVP/refs/heads/main/2nd%20slide.jpeg',
+                'https://raw.githubusercontent.com/websolutionsza/Developer-Toolkit-MVP/refs/heads/main/3rd%20slide.jpeg',
+                'https://raw.githubusercontent.com/websolutionsza/Developer-Toolkit-MVP/refs/heads/main/4th%20slide.jpeg'
+            ];
+
+            // ─── DOM refs ───
+            const $ = id => document.getElementById(id);
+            const container = $('pageContainer');
+            const toastContainer = $('toastContainer');
+            const sidebar = $('sidebar');
+            const overlay = $('sidebarOverlay');
+            const menuToggle = $('menuToggle');
+            const themeToggle = $('themeToggle');
+            const installBtn = $('installBtn');
+            const cookieBanner = $('cookieBanner');
+            const globalSearch = $('globalSearchInput');
+            const pageTitle = $('pageTitle');
+
+            // ─── Helpers ───
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            function sanitizeInput(text) {
+                if (typeof text !== 'string') return '';
+                return text.replace(/[<>]/g, '').slice(0, 5000);
+            }
+
+            function formatBytes(bytes) {
+                if (bytes < 1024) return bytes + ' B';
+                if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+                if (bytes < 1073741824) return (bytes / 1048576).toFixed(1) + ' MB';
+                return (bytes / 1073741824).toFixed(1) + ' GB';
+            }
+
+            function toast(msg, type = 'info') {
+                const el = document.createElement('div');
+                el.className = 'toast ' + type;
+                const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
+                el.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i> ${escapeHtml(msg)}`;
+                toastContainer.appendChild(el);
+                setTimeout(() => { el.style.opacity = '0';
+                    el.style.transform = 'translateX(20px)';
+                    setTimeout(() => el.remove(), 300); }, 3200);
+            }
+
+            function trackToolUse(tool) {
+                const a = state.analytics;
+                a.uses[tool] = (a.uses[tool] || 0) + 1;
+                a.total = (a.total || 0) + 1;
+                let max = 0,
+                    fav = null;
+                for (const [k, v] of Object.entries(a.uses)) {
+                    if (v > max) { max = v;
+                        fav = k; }
+                }
+                a.favorite = fav;
+                localStorage.setItem('devkit-analytics', JSON.stringify(a));
+                state.history = state.history.filter(h => h !== tool);
+                state.history.unshift(tool);
+                if (state.history.length > 20) state.history.pop();
+                localStorage.setItem('devkit-history', JSON.stringify(state.history));
+            }
+
+            function addFavorite(tool) {
+                if (!state.favorites.includes(tool)) {
+                    state.favorites.push(tool);
+                    localStorage.setItem('devkit-favorites', JSON.stringify(state.favorites));
+                    toast('Added to favorites', 'success');
+                } else {
+                    toast('Already in favorites', 'info');
+                }
+            }
+
+            function removeFavorite(tool) {
+                state.favorites = state.favorites.filter(t => t !== tool);
+                localStorage.setItem('devkit-favorites', JSON.stringify(state.favorites));
+                toast('Removed from favorites', 'info');
+            }
+
+            function isFavorite(tool) { return state.favorites.includes(tool); }
+
+            function copyToClipboard(text) {
+                if (!text) { toast('Nothing to copy', 'error'); return; }
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text).then(() => toast('Copied!', 'success')).catch(() => fallbackCopy(text));
+                } else {
+                    fallbackCopy(text);
+                }
+            }
+
+            function fallbackCopy(text) {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                try { document.execCommand('copy');
+                    toast('Copied!', 'success'); } catch (e) { toast('Copy failed', 'error'); }
+                document.body.removeChild(ta);
+            }
+
+            function downloadFile(content, filename, mime = 'text/plain') {
+                const blob = new Blob([content], { type: mime });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(url), 5000);
+            }
+
+            // ─── Carousel ───
+            let carouselInstances = [];
+
+            function renderCarousel(id = 'ad-carousel') {
+                return `
+                    <div class="carousel-container" id="${id}" role="region" aria-label="Advertisement carousel">
+                        <div class="carousel-track" id="${id}-track">
+                            ${CAROUSEL_IMAGES.map((img, i) => `
+                                <div class="carousel-slide" data-index="${i}" role="group" aria-label="Slide ${i+1} of ${CAROUSEL_IMAGES.length}">
+                                    <img src="${img}" alt="Advertisement ${i+1}" loading="lazy" draggable="false">
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button class="carousel-btn carousel-prev" id="${id}-prev" aria-label="Previous slide">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="carousel-btn carousel-next" id="${id}-next" aria-label="Next slide">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <div class="carousel-dots" id="${id}-dots" role="tablist" aria-label="Slide indicators">
+                            ${CAROUSEL_IMAGES.map((_, i) => `
+                                <span class="carousel-dot ${i === 0 ? 'active' : ''}" data-index="${i}" role="tab" aria-label="Go to slide ${i+1}" tabindex="0"></span>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            function initCarousel(id = 'ad-carousel') {
+                const container = document.getElementById(id);
+                if (!container) return;
+
+                // Clean up any existing instance for this container
+                const existingIdx = carouselInstances.findIndex(inst => inst.containerId === id);
+                if (existingIdx !== -1) {
+                    const old = carouselInstances[existingIdx];
+                    if (old.intervalId) clearInterval(old.intervalId);
+                    carouselInstances.splice(existingIdx, 1);
+                }
+
+                const track = document.getElementById(`${id}-track`);
+                const dots = container.querySelectorAll('.carousel-dot');
+                const prevBtn = document.getElementById(`${id}-prev`);
+                const nextBtn = document.getElementById(`${id}-next`);
+                const slides = track.querySelectorAll('.carousel-slide');
+                const totalSlides = slides.length;
+                let currentIndex = 0;
+                let intervalId = null;
+                let isPaused = false;
+                let touchStartX = 0;
+                let touchEndX = 0;
+                let isSwiping = false;
+                let autoPlayDelay = 4500;
+
+                const goToSlide = (index) => {
+                    if (index < 0) index = totalSlides - 1;
+                    if (index >= totalSlides) index = 0;
+                    currentIndex = index;
+                    const offset = -currentIndex * 100;
+                    track.style.transform = `translateX(${offset}%)`;
+                    dots.forEach((dot, i) => {
+                        dot.classList.toggle('active', i === currentIndex);
+                        dot.setAttribute('aria-selected', i === currentIndex ? 'true' : 'false');
+                    });
+                };
+
+                const nextSlide = () => {
+                    if (isPaused) return;
+                    goToSlide(currentIndex + 1);
+                };
+
+                const prevSlide = () => {
+                    if (isPaused) return;
+                    goToSlide(currentIndex - 1);
+                };
+
+                const startAutoplay = () => {
+                    if (intervalId) clearInterval(intervalId);
+                    intervalId = setInterval(nextSlide, autoPlayDelay);
+                };
+
+                const stopAutoplay = () => {
+                    if (intervalId) {
+                        clearInterval(intervalId);
+                        intervalId = null;
+                    }
+                };
+
+                const pauseAutoplay = () => {
+                    isPaused = true;
+                    stopAutoplay();
+                };
+
+                const resumeAutoplay = () => {
+                    isPaused = false;
+                    startAutoplay();
+                };
+
+                // --- Event Listeners ---
+                if (prevBtn) {
+                    prevBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        pauseAutoplay();
+                        prevSlide();
+                        setTimeout(resumeAutoplay, 8000);
+                    });
+                }
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        pauseAutoplay();
+                        nextSlide();
+                        setTimeout(resumeAutoplay, 8000);
+                    });
+                }
+
+                dots.forEach((dot) => {
+                    dot.addEventListener('click', function() {
+                        const idx = parseInt(this.dataset.index);
+                        if (idx !== currentIndex) {
+                            pauseAutoplay();
+                            goToSlide(idx);
+                            setTimeout(resumeAutoplay, 8000);
+                        }
+                    });
+                    dot.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            const idx = parseInt(this.dataset.index);
+                            if (idx !== currentIndex) {
+                                pauseAutoplay();
+                                goToSlide(idx);
+                                setTimeout(resumeAutoplay, 8000);
+                            }
+                        }
+                    });
+                });
+
+                // Touch / swipe support
+                container.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                    isSwiping = true;
+                    pauseAutoplay();
+                }, { passive: true });
+
+                container.addEventListener('touchmove', (e) => {
+                    if (!isSwiping) return;
+                    touchEndX = e.changedTouches[0].screenX;
+                }, { passive: true });
+
+                container.addEventListener('touchend', (e) => {
+                    if (!isSwiping) return;
+                    isSwiping = false;
+                    const diff = touchStartX - touchEndX;
+                    if (Math.abs(diff) > 40) {
+                        if (diff > 0) {
+                            nextSlide();
+                        } else {
+                            prevSlide();
+                        }
+                    }
+                    setTimeout(resumeAutoplay, 8000);
+                }, { passive: true });
+
+                // Mouse hover pause
+                container.addEventListener('mouseenter', () => {
+                    pauseAutoplay();
+                });
+                container.addEventListener('mouseleave', () => {
+                    resumeAutoplay();
+                });
+
+                // Pause on focus (accessibility)
+                container.addEventListener('focusin', () => {
+                    pauseAutoplay();
+                });
+                container.addEventListener('focusout', () => {
+                    resumeAutoplay();
+                });
+
+                // Keyboard navigation
+                container.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        pauseAutoplay();
+                        prevSlide();
+                        setTimeout(resumeAutoplay, 8000);
+                    } else if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        pauseAutoplay();
+                        nextSlide();
+                        setTimeout(resumeAutoplay, 8000);
+                    }
+                });
+
+                // Start autoplay
+                startAutoplay();
+
+                // Store instance
+                carouselInstances.push({
+                    containerId: id,
+                    intervalId: intervalId,
+                    goToSlide: goToSlide,
+                    nextSlide: nextSlide,
+                    prevSlide: prevSlide,
+                    startAutoplay: startAutoplay,
+                    stopAutoplay: stopAutoplay,
+                    pauseAutoplay: pauseAutoplay,
+                    resumeAutoplay: resumeAutoplay,
+                    currentIndex: () => currentIndex,
+                    totalSlides: totalSlides
+                });
+
+                // Clean up when page unloads or container is removed
+                const observer = new MutationObserver(() => {
+                    if (!document.getElementById(id)) {
+                        stopAutoplay();
+                        const idx = carouselInstances.findIndex(inst => inst.containerId === id);
+                        if (idx !== -1) carouselInstances.splice(idx, 1);
+                        observer.disconnect();
+                    }
+                });
+                observer.observe(document.body, { childList: true, subtree: true });
+
+                // Return cleanup function
+                return () => {
+                    stopAutoplay();
+                    const idx = carouselInstances.findIndex(inst => inst.containerId === id);
+                    if (idx !== -1) carouselInstances.splice(idx, 1);
+                    observer.disconnect();
+                };
+            }
+
+            // ─── Theme ───
+            function setTheme(theme) {
+                state.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('devkit-theme', theme);
+                themeToggle.innerHTML = theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            }
+
+            // ─── Navigation ───
+            function navigate(page) {
+                state.currentPage = page;
+                document.querySelectorAll('.sidebar-nav a').forEach(el => {
+                    el.classList.toggle('active', el.dataset.page === page);
+                });
+                pageTitle.textContent = page.charAt(0).toUpperCase() + page.slice(1);
+                renderPage(page);
+                trackToolUse(page);
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('show');
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // ─── Render Engine ───
+            function renderPage(page) {
+                const pages = {
+                    dashboard: renderDashboard,
+                    search: renderSearch,
+                    json: renderJson,
+                    playground: renderPlayground,
+                    formatters: renderFormatters,
+                    minifiers: renderMinifiers,
+                    converters: renderConverters,
+                    qr: renderQR,
+                    utilities: renderUtilities,
+                    text: renderText,
+                    image: renderImage,
+                    base64: renderBase64,
+                    colors: renderColors,
+                    calculators: renderCalculators,
+                    testing: renderTesting,
+                    learn: renderLearn,
+                    snippets: renderSnippets,
+                    favorites: renderFavorites,
+                    history: renderHistory,
+                    profile: renderProfile,
+                    analytics: renderAnalytics,
+                    about: renderAbout,
+                    contact: renderContact
+                };
+                if (pages[page]) {
+                    container.innerHTML = pages[page]();
+                    // Initialize carousel if it exists in the rendered HTML
+                    setTimeout(() => {
+                        const carouselEl = container.querySelector('.carousel-container');
+                        if (carouselEl && carouselEl.id) {
+                            initCarousel(carouselEl.id);
+                        }
+                    }, 50);
+                    bindToolEvents(page);
+                } else {
+                    container.innerHTML = `<div class="card"><p>Page not found.</p></div>`;
+                }
+            }
+
+            // ─── Page Templates ───
+
+            function renderDashboard() {
+                const recent = state.history.slice(0, 6);
+                const popular = ['json', 'playground', 'qr', 'text', 'base64', 'utilities'];
+                const favs = state.favorites;
+                const allTools = [
+                    { id: 'json', label: 'JSON Formatter', icon: 'fa-brackets-curly' },
+                    { id: 'playground', label: 'Playground', icon: 'fa-code' },
+                    { id: 'qr', label: 'QR Generator', icon: 'fa-qrcode' },
+                    { id: 'text', label: 'Text Tools', icon: 'fa-font' },
+                    { id: 'base64', label: 'Image to Base64', icon: 'fa-file-image' },
+                    { id: 'image', label: 'Image Converter', icon: 'fa-image' },
+                    { id: 'utilities', label: 'Utilities', icon: 'fa-wand-magic-sparkles' },
+                    { id: 'colors', label: 'Color Tools', icon: 'fa-palette' },
+                    { id: 'calculators', label: 'Calculators', icon: 'fa-calculator' },
+                    { id: 'snippets', label: 'Snippets', icon: 'fa-puzzle-piece' },
+                ];
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-hand-wave"></i> Welcome, ${escapeHtml(state.profile.username || 'Developer')}</div>
+                  <p class="text-muted">Your all-in-one browser-based developer toolkit. Everything runs locally — no data is sent to any server.</p>
+                </div>
+
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-bolt"></i> Quick Access</div>
+                  <div class="tool-grid">
+                    ${allTools.map(t => `
+                      <div class="tool-card" data-tool="${t.id}">
+                        <i class="fas ${t.icon}"></i>
+                        <h4>${t.label}</h4>
+                        ${isFavorite(t.id) ? '<span class="chip" style="background:var(--accent);color:#fff;">★</span>' : ''}
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+
+                ${recent.length ? `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-clock-rotate-left"></i> Recently Used</div>
+                  <div class="tool-grid">
+                    ${recent.map(id => {
+                      const t = allTools.find(x => x.id === id);
+                      return t ? `<div class="tool-card" data-tool="${t.id}"><i class="fas ${t.icon}"></i><h4>${t.label}</h4></div>` : '';
+                    }).join('')}
+                  </div>
+                </div>` : ''}
+
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-fire"></i> Popular Tools</div>
+                  <div class="tool-grid">
+                    ${popular.map(id => {
+                      const t = allTools.find(x => x.id === id);
+                      return t ? `<div class="tool-card" data-tool="${t.id}"><i class="fas ${t.icon}"></i><h4>${t.label}</h4></div>` : '';
+                    }).join('')}
+                  </div>
+                </div>
+
+                <div class="ad-space">${renderCarousel('ad-carousel-dashboard')}</div>
+
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-shield-halved"></i> Privacy & Data</div>
+                  <p class="text-sm">This website does not collect, store, or transmit any sensitive personal information. All processing happens locally in your browser. No IDs, passport details, banking info, credit card data, or government documents are ever collected. User-generated content stays on your device.</p>
+                  <p class="text-sm mt-8"><strong>Disclaimer:</strong> This website provides developer tools for convenience and productivity. Results may vary depending on usage. Users are responsible for reviewing generated outputs before using them in projects. This platform does not guarantee error-free results.</p>
+                </div>
+              `;
+            }
+
+            function renderSearch() {
+                const allTools = [
+                    { id: 'json', label: 'JSON Formatter', cat: 'Code' },
+                    { id: 'playground', label: 'Playground', cat: 'Code' },
+                    { id: 'formatters', label: 'Code Formatters', cat: 'Code' },
+                    { id: 'minifiers', label: 'Code Minifiers', cat: 'Code' },
+                    { id: 'converters', label: 'Converters', cat: 'Converters' },
+                    { id: 'qr', label: 'QR Generator', cat: 'Generators' },
+                    { id: 'utilities', label: 'Utilities', cat: 'Generators' },
+                    { id: 'text', label: 'Text Tools', cat: 'Text' },
+                    { id: 'image', label: 'Image Converter', cat: 'Images' },
+                    { id: 'base64', label: 'Image to Base64', cat: 'Images' },
+                    { id: 'colors', label: 'Color Tools', cat: 'Colors' },
+                    { id: 'calculators', label: 'Calculators', cat: 'Calculators' },
+                    { id: 'testing', label: 'Testing Tools', cat: 'Testing' },
+                    { id: 'learn', label: 'Learn', cat: 'Learning' },
+                    { id: 'snippets', label: 'Snippets', cat: 'Storage' },
+                    { id: 'favorites', label: 'Favorites', cat: 'Storage' },
+                    { id: 'history', label: 'History', cat: 'Storage' },
+                    { id: 'profile', label: 'Profile', cat: 'Profile' },
+                    { id: 'analytics', label: 'Analytics', cat: 'Profile' },
+                    { id: 'about', label: 'About', cat: 'Info' },
+                    { id: 'contact', label: 'Contact', cat: 'Info' },
+                ];
+                const cats = [...new Set(allTools.map(t => t.cat))];
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-search"></i> Search Tools</div>
+                  <div class="form-group">
+                    <input type="text" id="searchToolsInput" placeholder="Type to filter tools..." style="max-width:500px;">
+                  </div>
+                  <div id="searchResults">
+                    ${cats.map(cat => `
+                      <h4 style="margin:16px 0 8px;color:var(--text-muted);font-weight:500;">${cat}</h4>
+                      <div class="tool-grid" style="margin-bottom:12px;">
+                        ${allTools.filter(t => t.cat === cat).map(t => `
+                          <div class="tool-card" data-tool="${t.id}">
+                            <i class="fas ${getIconForTool(t.id)}"></i>
+                            <h4>${t.label}</h4>
+                            <p class="text-muted" style="font-size:0.65rem;">${cat}</p>
+                          </div>
+                        `).join('')}
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              `;
+            }
+
+            function getIconForTool(id) {
+                const map = {
+                    json: 'fa-brackets-curly',
+                    playground: 'fa-code',
+                    formatters: 'fa-indent',
+                    minifiers: 'fa-compress',
+                    converters: 'fa-arrows-turn-to-dots',
+                    qr: 'fa-qrcode',
+                    utilities: 'fa-wand-magic-sparkles',
+                    text: 'fa-font',
+                    image: 'fa-image',
+                    base64: 'fa-file-image',
+                    colors: 'fa-palette',
+                    calculators: 'fa-calculator',
+                    testing: 'fa-flask',
+                    learn: 'fa-graduation-cap',
+                    snippets: 'fa-puzzle-piece',
+                    favorites: 'fa-star',
+                    history: 'fa-clock-rotate-left',
+                    profile: 'fa-user',
+                    analytics: 'fa-chart-simple',
+                    about: 'fa-circle-info',
+                    contact: 'fa-envelope'
+                };
+                return map[id] || 'fa-cube';
+            }
+
+            // ─── JSON Formatter ───
+            function renderJson() {
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-brackets-curly"></i> JSON Formatter</div>
+                  <div class="form-group">
+                    <label for="jsonInput">Paste JSON</label>
+                    <textarea id="jsonInput" rows="8" placeholder='{"example": "Paste JSON here..."}'></textarea>
+                  </div>
+                  <div class="btn-group">
+                    <button class="btn btn-primary" id="jsonFormat"><i class="fas fa-wand-magic-sparkles"></i> Format</button>
+                    <button class="btn btn-outline" id="jsonMinify"><i class="fas fa-compress"></i> Minify</button>
+                    <button class="btn btn-outline" id="jsonValidate"><i class="fas fa-check-circle"></i> Validate</button>
+                    <button class="btn btn-success" id="jsonCopy"><i class="fas fa-copy"></i> Copy</button>
+                    <button class="btn btn-outline" id="jsonClear"><i class="fas fa-eraser"></i> Clear</button>
+                  </div>
+                  <div class="form-group mt-16">
+                    <label for="jsonOutput">Output</label>
+                    <textarea id="jsonOutput" rows="8" readonly></textarea>
+                  </div>
+                  <div id="jsonStatus" class="text-sm text-muted mt-8"></div>
+                </div>
+              `;
+            }
+
+            // ─── Playground ───
+            function renderPlayground() {
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-code"></i> HTML / CSS / JS Playground</div>
+                  <div class="playground-editors">
+                    <div class="editor-wrap">
+                      <div class="editor-label">HTML <button class="btn btn-sm btn-outline" id="playCopyHtml"><i class="fas fa-copy"></i></button></div>
+                      <textarea id="playHtml" rows="8" placeholder="<h1>Hello</h1>"><h1 style="color:var(--accent)">Hello, Dev!</h1><p>Edit me.</p></textarea>
+                    </div>
+                    <div class="editor-wrap">
+                      <div class="editor-label">CSS <button class="btn btn-sm btn-outline" id="playCopyCss"><i class="fas fa-copy"></i></button></div>
+                      <textarea id="playCss" rows="8" placeholder="h1 { color: blue; }">h1 { font-family: system-ui; } p { color: #64748b; }</textarea>
+                    </div>
+                    <div class="editor-wrap">
+                      <div class="editor-label">JS <button class="btn btn-sm btn-outline" id="playCopyJs"><i class="fas fa-copy"></i></button></div>
+                      <textarea id="playJs" rows="8" placeholder="console.log('Hello')">console.log("Hello from the playground!");</textarea>
+                    </div>
+                  </div>
+                  <div class="btn-group mt-8">
+                    <button class="btn btn-primary" id="playRun"><i class="fas fa-play"></i> Run</button>
+                    <button class="btn btn-outline" id="playClear"><i class="fas fa-eraser"></i> Clear</button>
+                  </div>
+                  <div class="playground-preview" id="playPreview"></div>
+                </div>
+              `;
+            }
+
+            // ─── Formatters ───
+            function renderFormatters() {
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-indent"></i> Code Formatters</div>
+                  <div class="form-group">
+                    <label for="formatLang">Language</label>
+                    <select id="formatLang">
+                      <option value="html">HTML</option>
+                      <option value="css">CSS</option>
+                      <option value="js">JavaScript</option>
+                      <option value="sql">SQL</option>
+                      <option value="md">Markdown</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="formatInput">Input</label>
+                    <textarea id="formatInput" rows="6" placeholder="Paste code to format..."></textarea>
+                  </div>
+                  <div class="btn-group">
+                    <button class="btn btn-primary" id="formatBtn"><i class="fas fa-wand-magic-sparkles"></i> Format</button>
+                    <button class="btn btn-success" id="formatCopy"><i class="fas fa-copy"></i> Copy</button>
+                    <button class="btn btn-outline" id="formatClear"><i class="fas fa-eraser"></i> Clear</button>
+                  </div>
+                  <div class="form-group mt-16">
+                    <label for="formatOutput">Output</label>
+                    <textarea id="formatOutput" rows="6" readonly></textarea>
+                  </div>
+                </div>
+              `;
+            }
+
+            // ─── Minifiers ───
+            function renderMinifiers() {
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-compress"></i> Code Minifiers</div>
+                  <div class="form-group">
+                    <label for="minifyLang">Language</label>
+                    <select id="minifyLang">
+                      <option value="html">HTML</option>
+                      <option value="css">CSS</option>
+                      <option value="js">JavaScript</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="minifyInput">Input</label>
+                    <textarea id="minifyInput" rows="6" placeholder="Paste code to minify..."></textarea>
+                  </div>
+                  <div class="btn-group">
+                    <button class="btn btn-primary" id="minifyBtn"><i class="fas fa-compress"></i> Minify</button>
+                    <button class="btn btn-success" id="minifyCopy"><i class="fas fa-copy"></i> Copy</button>
+                    <button class="btn btn-outline" id="minifyClear"><i class="fas fa-eraser"></i> Clear</button>
+                  </div>
+                  <div class="form-group mt-16">
+                    <label for="minifyOutput">Output</label>
+                    <textarea id="minifyOutput" rows="6" readonly></textarea>
+                  </div>
+                </div>
+              `;
+            }
+
+            // ─── Converters ───
+            function renderConverters() {
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-arrows-turn-to-dots"></i> Converters</div>
+                  <div class="form-group">
+                    <label for="convType">Conversion Type</label>
+                    <select id="convType">
+                      <option value="json2csv">JSON → CSV</option>
+                      <option value="csv2json">CSV → JSON</option>
+                      <option value="xml2json">XML → JSON</option>
+                      <option value="md2html">Markdown → HTML</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="convInput">Input</label>
+                    <textarea id="convInput" rows="6" placeholder="Enter data to convert..."></textarea>
+                  </div>
+                  <div class="btn-group">
+                    <button class="btn btn-primary" id="convBtn"><i class="fas fa-arrow-right-arrow-left"></i> Convert</button>
+                    <button class="btn btn-success" id="convCopy"><i class="fas fa-copy"></i> Copy</button>
+                    <button class="btn btn-outline" id="convClear"><i class="fas fa-eraser"></i> Clear</button>
+                  </div>
+                  <div class="form-group mt-16">
+                    <label for="convOutput">Output</label>
+                    <textarea id="convOutput" rows="6" readonly></textarea>
+                  </div>
+                </div>
+              `;
+            }
+
+            // ─── QR Generator ───
+            function renderQR() {
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-qrcode"></i> QR Code Generator</div>
+                  <div class="form-group">
+                    <label for="qrInput">Text or URL</label>
+                    <input type="text" id="qrInput" placeholder="https://example.com or any text" value="https://developer-toolkit.dev">
+                  </div>
+                  <div class="btn-group">
+                    <button class="btn btn-primary" id="qrGenerate"><i class="fas fa-qrcode"></i> Generate</button>
+                    <button class="btn btn-success" id="qrDownload"><i class="fas fa-download"></i> Download</button>
+                    <button class="btn btn-outline" id="qrClear"><i class="fas fa-eraser"></i> Clear</button>
+                  </div>
+                  <div class="qr-output mt-16" id="qrOutput">
+                    <div id="qrCanvasWrap"></div>
+                  </div>
+                </div>
+              `;
+            }
+
+            // ─── Utilities ───
+            function renderUtilities() {
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-wand-magic-sparkles"></i> Developer Utilities</div>
+                  <div class="tab-bar">
+                    <button class="tab-btn active" data-tab="pwgen">Password</button>
+                    <button class="tab-btn" data-tab="randgen">Random String</button>
+                    <button class="tab-btn" data-tab="tsconv">Timestamp</button>
+                    <button class="tab-btn" data-tab="picker">Color Picker</button>
+                    <button class="tab-btn" data-tab="b64">Base64</button>
+                  </div>
+                  <div id="utilitiesContainer">
+                    <div class="tab-pane active" id="tab-pwgen">
+                      <div class="form-row">
+                        <div class="form-group"><label>Length</label><input type="number" id="pwLength" value="16" min="4" max="128"></div>
+                        <div class="form-group" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding-top:20px;">
+                          <label><input type="checkbox" id="pwUpper" checked> A-Z</label>
+                          <label><input type="checkbox" id="pwLower" checked> a-z</label>
+                          <label><input type="checkbox" id="pwDigits" checked> 0-9</label>
+                          <label><input type="checkbox" id="pwSymbols" checked> !@#</label>
+                        </div>
+                      </div>
+                      <div class="btn-group"><button class="btn btn-primary" id="pwGenerate"><i class="fas fa-key"></i> Generate</button><button class="btn btn-success" id="pwCopy"><i class="fas fa-copy"></i> Copy</button></div>
+                      <div class="form-group mt-16"><label>Password</label><input type="text" id="pwOutput" readonly style="font-family:monospace;"></div>
+                    </div>
+                    <div class="tab-pane" id="tab-randgen">
+                      <div class="form-row"><div class="form-group"><label>Length</label><input type="number" id="randLength" value="12" min="1" max="256"></div></div>
+                      <div class="btn-group"><button class="btn btn-primary" id="randGenerate"><i class="fas fa-dice"></i> Generate</button><button class="btn btn-success" id="randCopy"><i class="fas fa-copy"></i> Copy</button></div>
+                      <div class="form-group mt-16"><label>Random String</label><input type="text" id="randOutput" readonly style="font-family:monospace;"></div>
+                    </div>
+                    <div class="tab-pane" id="tab-tsconv">
+                      <div class="form-row">
+                        <div class="form-group"><label>Unix Timestamp (seconds)</label><input type="number" id="tsInput" placeholder="1700000000"></div>
+                        <div class="form-group"><label>Date</label><input type="datetime-local" id="tsDateInput"></div>
+                      </div>
+                      <div class="btn-group"><button class="btn btn-primary" id="tsConvert"><i class="fas fa-clock"></i> Convert</button></div>
+                      <div class="form-group mt-16"><label>Result</label><input type="text" id="tsOutput" readonly></div>
+                    </div>
+                    <div class="tab-pane" id="tab-picker">
+                      <div class="color-picker-wrap">
+                        <input type="color" id="cpPicker" value="#3b82f6">
+                        <div><label>HEX</label><input type="text" id="cpHex" value="#3b82f6" style="width:120px;"></div>
+                        <div><label>RGB</label><input type="text" id="cpRgb" value="rgb(59,130,246)" style="width:140px;" readonly></div>
+                      </div>
+                      <div class="btn-group mt-8"><button class="btn btn-success" id="cpCopy"><i class="fas fa-copy"></i> Copy HEX</button></div>
+                    </div>
+                    <div class="tab-pane" id="tab-b64">
+                      <div class="form-group"><label>Text to encode/decode</label><textarea id="b64Input" rows="3" placeholder="Hello World"></textarea></div>
+                      <div class="btn-group"><button class="btn btn-primary" id="b64Encode"><i class="fas fa-lock"></i> Encode</button><button class="btn btn-outline" id="b64Decode"><i class="fas fa-unlock"></i> Decode</button><button class="btn btn-success" id="b64Copy"><i class="fas fa-copy"></i> Copy</button></div>
+                      <div class="form-group mt-16"><label>Result</label><textarea id="b64Output" rows="3" readonly></textarea></div>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }
+
+            // ─── Text Tools ───
+            function renderText() {
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-font"></i> Text Tools</div>
+                  <div class="form-group">
+                    <label for="textInput">Text</label>
+                    <textarea id="textInput" rows="6" placeholder="Enter text to analyze..."></textarea>
+                  </div>
+                  <div class="btn-group">
+                    <button class="btn btn-outline" id="textCount"><i class="fas fa-calculator"></i> Count</button>
+                    <button class="btn btn-outline" id="textUpper"><i class="fas fa-arrow-up"></i> UPPER</button>
+                    <button class="btn btn-outline" id="textLower"><i class="fas fa-arrow-down"></i> lower</button>
+                    <button class="btn btn-outline" id="textTitle"><i class="fas fa-font-case"></i> Title</button>
+                    <button class="btn btn-outline" id="textTrim"><i class="fas fa-scissors"></i> Trim Spaces</button>
+                    <button class="btn btn-outline" id="textClean"><i class="fas fa-broom"></i> Clean</button>
+                    <button class="btn btn-success" id="textCopy"><i class="fas fa-copy"></i> Copy</button>
+                    <button class="btn btn-outline" id="textClear"><i class="fas fa-eraser"></i> Clear</button>
+                  </div>
+                  <div class="form-group mt-16">
+                    <label>Stats</label>
+                    <div id="textStats" class="file-info">
+                      <span>Words: 0</span><span>Characters: 0</span><span>Lines: 0</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="textOutput">Output</label>
+                    <textarea id="textOutput" rows="4" readonly></textarea>
+                  </div>
+                </div>
+              `;
+            }
+
+            // ─── Image Converter ───
+            function renderImage() {
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-image"></i> Image Converter</div>
+                  <div class="form-group">
+                    <label>Upload Image</label>
+                    <input type="file" id="imgUpload" accept="image/*">
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group"><label>Target Format</label>
+                      <select id="imgFormat">
+                        <option value="image/png">PNG</option>
+                        <option value="image/jpeg">JPEG</option>
+                        <option value="image/webp">WEBP</option>
+                        <option value="image/gif">GIF</option>
+                      </select>
+                    </div>
+                    <div class="form-group"><label>Quality (JPEG/WEBP)</label><input type="range" id="imgQuality" min="10" max="100" value="80"><span id="imgQualityLabel">80%</span></div>
+                  </div>
+                  <div class="btn-group">
+                    <button class="btn btn-primary" id="imgConvertBtn"><i class="fas fa-arrow-right-arrow-left"></i> Convert</button>
+                    <button class="btn btn-success" id="imgDownload"><i class="fas fa-download"></i> Download</button>
+                    <button class="btn btn-outline" id="imgClear"><i class="fas fa-eraser"></i> Clear</button>
+                  </div>
+                  <div id="imgPreviewWrap" class="mt-16 text-center">
+                    <img id="imgPreview" class="preview-img" style="display:none;" alt="Preview">
+                    <div id="imgInfo" class="file-info mt-8"><span>File: -</span><span>Size: -</span><span>Dimensions: -</span></div>
+                  </div>
+                </div>
+              `;
+            }
+
+            // ─── Image to Base64 ───
+            function renderBase64() {
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-file-image"></i> Image to Base64 Converter</div>
+                  <div class="form-group">
+                    <label>Upload Image</label>
+                    <input type="file" id="b64Upload" accept="image/png,image/jpeg,image/webp,image/gif">
+                  </div>
+                  <div class="form-group">
+                    <label>Output Format</label>
+                    <select id="b64Format">
+                      <option value="full">Full Data URL (data:image/...)</option>
+                      <option value="raw">Raw Base64</option>
+                    </select>
+                  </div>
+                  <div class="btn-group">
+                    <button class="btn btn-primary" id="b64ConvertImg"><i class="fas fa-arrow-right-arrow-left"></i> Convert</button>
+                    <button class="btn btn-success" id="b64CopyImg"><i class="fas fa-copy"></i> Copy</button>
+                    <button class="btn btn-outline" id="b64DownloadImg"><i class="fas fa-download"></i> Download .txt</button>
+                    <button class="btn btn-outline" id="b64ClearImg"><i class="fas fa-eraser"></i> Clear</button>
+                  </div>
+                  <div id="b64PreviewWrap" class="mt-16 text-center">
+                    <img id="b64Preview" class="preview-img" style="display:none;" alt="Preview">
+                    <div id="b64Info" class="file-info mt-8"><span>File: -</span><span>Size: -</span><span>Dimensions: -</span></div>
+                  </div>
+                  <div class="form-group mt-16">
+                    <label>Base64 Output</label>
+                    <textarea id="b64OutputImg" rows="6" readonly placeholder="Base64 will appear here..."></textarea>
+                  </div>
+                  <div class="text-sm text-muted mt-8">
+                    <i class="fas fa-circle-info"></i> Base64 encoding allows developers to embed images directly into HTML, CSS, JavaScript, JSON, and other files without storing the image separately.
+                  </div>
+                </div>
+              `;
+            }
+
+            // ─── Color Tools ───
+            function renderColors() {
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-palette"></i> Color Tools</div>
+                  <div class="tab-bar">
+                    <button class="tab-btn active" data-tab="hex2rgb">HEX ↔ RGB</button>
+                    <button class="tab-btn" data-tab="gradient">Gradient</button>
+                    <button class="tab-btn" data-tab="palette">Palette</button>
+                  </div>
+                  <div id="colorsContainer">
+                    <div class="tab-pane active" id="tab-hex2rgb">
+                      <div class="form-row">
+                        <div class="form-group"><label>HEX</label><input type="text" id="colorHex" value="#3b82f6" placeholder="#rrggbb"></div>
+                        <div class="form-group"><label>RGB</label><input type="text" id="colorRgb" placeholder="rgb(r,g,b)" readonly></div>
+                      </div>
+                      <div class="btn-group"><button class="btn btn-primary" id="colorConvert"><i class="fas fa-arrow-right-arrow-left"></i> Convert</button><button class="btn btn-success" id="colorCopy"><i class="fas fa-copy"></i> Copy HEX</button></div>
+                      <div class="mt-8" style="width:100%;height:40px;border-radius:var(--radius-sm);border:1px solid var(--border-color);" id="colorSwatch"></div>
+                    </div>
+                    <div class="tab-pane" id="tab-gradient">
+                      <div class="form-row">
+                        <div class="form-group"><label>Color 1</label><input type="color" id="gradColor1" value="#3b82f6"></div>
+                        <div class="form-group"><label>Color 2</label><input type="color" id="gradColor2" value="#f59e0b"></div>
+                        <div class="form-group"><label>Direction</label>
+                          <select id="gradDir"><option value="to right">→</option><option value="to bottom">↓</option><option value="to left">←</option><option value="to top">↑</option><option value="to bottom right">↘</option></select>
+                        </div>
+                      </div>
+                      <div class="btn-group"><button class="btn btn-primary" id="gradGenerate"><i class="fas fa-wand-magic-sparkles"></i> Generate</button><button class="btn btn-success" id="gradCopy"><i class="fas fa-copy"></i> Copy CSS</button></div>
+                      <div class="gradient-preview" id="gradPreview" style="background:linear-gradient(to right,#3b82f6,#f59e0b);"></div>
+                      <div class="form-group mt-8"><label>CSS</label><textarea id="gradOutput" rows="2" readonly>background: linear-gradient(to right, #3b82f6, #f59e0b);</textarea></div>
+                    </div>
+                    <div class="tab-pane" id="tab-palette">
+                      <div class="form-group"><label>Base Color</label><input type="color" id="palBase" value="#3b82f6"></div>
+                      <div class="btn-group"><button class="btn btn-primary" id="palGenerate"><i class="fas fa-palette"></i> Generate Palette</button></div>
+                      <div class="palette-swatch" id="palSwatches"></div>
+                      <div class="btn-group mt-8"><button class="btn btn-success" id="palCopy"><i class="fas fa-copy"></i> Copy All</button></div>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }
+
+            // ─── Calculators ───
+            function renderCalculators() {
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-calculator"></i> Developer Calculators</div>
+                  <div class="tab-bar">
+                    <button class="tab-btn active" data-tab="pct">Percentage</button>
+                    <button class="tab-btn" data-tab="fsize">File Size</button>
+                    <button class="tab-btn" data-tab="time">Time</button>
+                    <button class="tab-btn" data-tab="unit">Unit</button>
+                    <button class="tab-btn" data-tab="age">Age</button>
+                  </div>
+                  <div id="calcContainer">
+                    <div class="tab-pane active" id="tab-pct">
+                      <div class="form-row"><div class="form-group"><label>Value</label><input type="number" id="pctVal" placeholder="100"></div><div class="form-group"><label>Percent</label><input type="number" id="pctPct" placeholder="20"></div></div>
+                      <div class="btn-group"><button class="btn btn-primary" id="pctCalc"><i class="fas fa-calculator"></i> Calculate</button></div>
+                      <div class="form-group mt-8"><label>Result</label><input type="text" id="pctResult" readonly></div>
+                    </div>
+                    <div class="tab-pane" id="tab-fsize">
+                      <div class="form-row"><div class="form-group"><label>Bytes</label><input type="number" id="fsBytes" placeholder="1024"></div></div>
+                      <div class="btn-group"><button class="btn btn-primary" id="fsCalc"><i class="fas fa-arrows-left-right"></i> Convert</button></div>
+                      <div class="form-group mt-8"><label>Result</label><input type="text" id="fsResult" readonly></div>
+                    </div>
+                    <div class="tab-pane" id="tab-time">
+                      <div class="form-row"><div class="form-group"><label>Seconds</label><input type="number" id="timeSec" placeholder="3600"></div></div>
+                      <div class="btn-group"><button class="btn btn-primary" id="timeCalc"><i class="fas fa-clock"></i> Convert</button></div>
+                      <div class="form-group mt-8"><label>Result</label><input type="text" id="timeResult" readonly></div>
+                    </div>
+                    <div class="tab-pane" id="tab-unit">
+                      <div class="form-row">
+                        <div class="form-group"><label>Value</label><input type="number" id="unitVal" placeholder="1"></div>
+                        <div class="form-group"><label>From</label><select id="unitFrom"><option value="px">px</option><option value="rem">rem</option><option value="em">em</option><option value="pt">pt</option><option value="cm">cm</option><option value="in">in</option></select></div>
+                        <div class="form-group"><label>To</label><select id="unitTo"><option value="px">px</option><option value="rem">rem</option><option value="em">em</option><option value="pt">pt</option><option value="cm">cm</option><option value="in">in</option></select></div>
+                      </div>
+                      <div class="btn-group"><button class="btn btn-primary" id="unitCalc"><i class="fas fa-arrows-left-right"></i> Convert</button></div>
+                      <div class="form-group mt-8"><label>Result</label><input type="text" id="unitResult" readonly></div>
+                    </div>
+                    <div class="tab-pane" id="tab-age">
+                      <div class="form-row"><div class="form-group"><label>Date of Birth</label><input type="date" id="ageDob"></div></div>
+                      <div class="btn-group"><button class="btn btn-primary" id="ageCalc"><i class="fas fa-cake-candles"></i> Calculate Age</button></div>
+                      <div class="form-group mt-8"><label>Result</label><input type="text" id="ageResult" readonly></div>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }
+
+            // ─── Testing Tools ───
+            function renderTesting() {
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-flask"></i> Testing Tools</div>
+                  <div class="tab-bar">
+                    <button class="tab-btn active" data-tab="urlenc">URL Encode</button>
+                    <button class="tab-btn" data-tab="htmlenc">HTML Entity</button>
+                    <button class="tab-btn" data-tab="regex">Regex Tester</button>
+                    <button class="tab-btn" data-tab="diff">Text Diff</button>
+                  </div>
+                  <div id="testContainer">
+                    <div class="tab-pane active" id="tab-urlenc">
+                      <div class="form-group"><label>Text</label><textarea id="urlInput" rows="3" placeholder="Hello World! @#$"></textarea></div>
+                      <div class="btn-group"><button class="btn btn-primary" id="urlEncode"><i class="fas fa-lock"></i> Encode</button><button class="btn btn-outline" id="urlDecode"><i class="fas fa-unlock"></i> Decode</button><button class="btn btn-success" id="urlCopy"><i class="fas fa-copy"></i> Copy</button></div>
+                      <div class="form-group mt-8"><label>Result</label><textarea id="urlOutput" rows="3" readonly></textarea></div>
+                    </div>
+                    <div class="tab-pane" id="tab-htmlenc">
+                      <div class="form-group"><label>Text</label><textarea id="htmlInput" rows="3" placeholder="<div>Hello</div>"></textarea></div>
+                      <div class="btn-group"><button class="btn btn-primary" id="htmlEncode"><i class="fas fa-lock"></i> Encode</button><button class="btn btn-outline" id="htmlDecode"><i class="fas fa-unlock"></i> Decode</button><button class="btn btn-success" id="htmlCopy"><i class="fas fa-copy"></i> Copy</button></div>
+                      <div class="form-group mt-8"><label>Result</label><textarea id="htmlOutput" rows="3" readonly></textarea></div>
+                    </div>
+                    <div class="tab-pane" id="tab-regex">
+                      <div class="form-row">
+                        <div class="form-group"><label>Regex</label><input type="text" id="regexPattern" placeholder="^[a-z]+$"></div>
+                        <div class="form-group"><label>Flags</label><input type="text" id="regexFlags" placeholder="gi" value="g"></div>
+                      </div>
+                      <div class="form-group"><label>Test String</label><textarea id="regexTest" rows="3" placeholder="Enter text to test..."></textarea></div>
+                      <div class="btn-group"><button class="btn btn-primary" id="regexTestBtn"><i class="fas fa-play"></i> Test</button></div>
+                      <div class="form-group mt-8"><label>Result</label><textarea id="regexOutput" rows="3" readonly></textarea></div>
+                    </div>
+                    <div class="tab-pane" id="tab-diff">
+                      <div class="form-row">
+                        <div class="form-group"><label>Text A</label><textarea id="diffA" rows="3" placeholder="Original text..."></textarea></div>
+                        <div class="form-group"><label>Text B</label><textarea id="diffB" rows="3" placeholder="Modified text..."></textarea></div>
+                      </div>
+                      <div class="btn-group"><button class="btn btn-primary" id="diffBtn"><i class="fas fa-code-branch"></i> Compare</button></div>
+                      <div class="diff-output mt-8" id="diffOutput"></div>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }
+
+            // ─── Learn ───
+            function renderLearn() {
+                const topics = [
+                    { id: 'html', label: 'HTML Basics', code: '<h1>Hello</h1>\n<p>This is a paragraph.</p>', desc: 'HyperText Markup Language structures web content.' },
+                    { id: 'css', label: 'CSS Basics', code: 'h1 { color: blue; font-size: 2rem; }', desc: 'Cascading Style Sheets styles the appearance.' },
+                    { id: 'js', label: 'JavaScript Basics', code: 'console.log("Hello!");\nconst x = 10;', desc: 'JavaScript adds interactivity and logic.' },
+                    { id: 'json', label: 'JSON Basics', code: '{"name":"Dev","version":1,"items":["a","b"]}', desc: 'JavaScript Object Notation for data exchange.' },
+                    { id: 'api', label: 'APIs Basics', code: 'fetch("/api/data")\n  .then(r => r.json())\n  .then(console.log);', desc: 'APIs let apps communicate with each other.' },
+                    { id: 'git', label: 'Git Basics', code: 'git init\n git add .\n git commit -m "message"\n git push', desc: 'Git tracks code changes and enables collaboration.' },
+                ];
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-graduation-cap"></i> Learn</div>
+                  <p class="text-muted">Beginner-friendly explanations with copyable examples.</p>
+                  ${topics.map(t => `
+                    <div class="card" style="margin-top:12px;padding:16px 20px;">
+                      <h4 style="display:flex;justify-content:space-between;align-items:center;">
+                        <span>${t.label}</span>
+                        <button class="btn btn-sm btn-outline learnCopy" data-code="${escapeHtml(t.code)}"><i class="fas fa-copy"></i> Copy</button>
+                      </h4>
+                      <p class="text-sm text-muted">${t.desc}</p>
+                      <pre style="background:var(--bg-input);padding:12px;border-radius:var(--radius-sm);border:1px solid var(--border-color);font-size:0.78rem;overflow-x:auto;margin-top:8px;">${escapeHtml(t.code)}</pre>
+                    </div>
+                  `).join('')}
+                </div>
+              `;
+            }
+
+            // ─── Snippets ───
+            function renderSnippets() {
+                const items = state.snippets || [];
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-puzzle-piece"></i> Code Snippets</div>
+                  <div class="form-row">
+                    <div class="form-group"><label>Title</label><input type="text" id="snippetTitle" placeholder="My snippet"></div>
+                    <div class="form-group"><label>Description</label><input type="text" id="snippetDesc" placeholder="What does it do?"></div>
+                  </div>
+                  <div class="form-group"><label>Code</label><textarea id="snippetCode" rows="4" placeholder="// paste your code"></textarea></div>
+                  <div class="btn-group">
+                    <button class="btn btn-primary" id="snippetSave"><i class="fas fa-save"></i> Save</button>
+                    <button class="btn btn-outline" id="snippetSearchBtn"><i class="fas fa-search"></i> Search</button>
+                    <input type="text" id="snippetSearch" placeholder="Search snippets..." style="max-width:200px;display:inline-block;width:auto;">
+                  </div>
+                  <div id="snippetList" class="mt-16">
+                    ${items.length === 0 ? '<div class="empty-state"><i class="fas fa-puzzle-piece"></i><p>No snippets saved yet.</p></div>' :
+                    items.map((s, i) => `
+                      <div class="snippet-item" data-index="${i}">
+                        <div class="snippet-info">
+                          <h4>${escapeHtml(s.title || 'Untitled')}</h4>
+                          ${s.desc ? `<p>${escapeHtml(s.desc)}</p>` : ''}
+                          <code>${escapeHtml(s.code || '')}</code>
+                        </div>
+                        <div class="snippet-actions">
+                          <button class="btn btn-sm btn-outline snippetCopy" data-code="${escapeHtml(s.code || '')}"><i class="fas fa-copy"></i></button>
+                          <button class="btn btn-sm btn-danger snippetDelete" data-index="${i}"><i class="fas fa-trash"></i></button>
+                        </div>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              `;
+            }
+
+            // ─── Favorites ───
+            function renderFavorites() {
+                const favs = state.favorites || [];
+                const toolNames = {
+                    json: 'JSON Formatter',
+                    playground: 'Playground',
+                    formatters: 'Code Formatters',
+                    minifiers: 'Code Minifiers',
+                    converters: 'Converters',
+                    qr: 'QR Generator',
+                    utilities: 'Utilities',
+                    text: 'Text Tools',
+                    image: 'Image Converter',
+                    base64: 'Image to Base64',
+                    colors: 'Color Tools',
+                    calculators: 'Calculators',
+                    testing: 'Testing Tools',
+                    learn: 'Learn',
+                    snippets: 'Snippets'
+                };
+                const icons = {
+                    json: 'fa-brackets-curly',
+                    playground: 'fa-code',
+                    formatters: 'fa-indent',
+                    minifiers: 'fa-compress',
+                    converters: 'fa-arrows-turn-to-dots',
+                    qr: 'fa-qrcode',
+                    utilities: 'fa-wand-magic-sparkles',
+                    text: 'fa-font',
+                    image: 'fa-image',
+                    base64: 'fa-file-image',
+                    colors: 'fa-palette',
+                    calculators: 'fa-calculator',
+                    testing: 'fa-flask',
+                    learn: 'fa-graduation-cap',
+                    snippets: 'fa-puzzle-piece'
+                };
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-star"></i> Favorites</div>
+                  ${favs.length === 0 ? '<div class="empty-state"><i class="fas fa-star"></i><p>No favorites yet. Star tools you use often!</p></div>' :
+                    `<div class="tool-grid">${favs.map(id => `
+                      <div class="tool-card" data-tool="${id}">
+                        <i class="fas ${icons[id] || 'fa-cube'}"></i>
+                        <h4>${toolNames[id] || id}</h4>
+                        <button class="btn btn-sm btn-outline unfavorite-btn" data-tool="${id}" style="margin-top:6px;"><i class="fas fa-star"></i> Remove</button>
+                      </div>
+                    `).join('')}</div>`
+                  }
+                </div>
+              `;
+            }
+
+            // ─── History ───
+            function renderHistory() {
+                const hist = state.history || [];
+                const toolNames = {
+                    json: 'JSON Formatter',
+                    playground: 'Playground',
+                    formatters: 'Code Formatters',
+                    minifiers: 'Code Minifiers',
+                    converters: 'Converters',
+                    qr: 'QR Generator',
+                    utilities: 'Utilities',
+                    text: 'Text Tools',
+                    image: 'Image Converter',
+                    base64: 'Image to Base64',
+                    colors: 'Color Tools',
+                    calculators: 'Calculators',
+                    testing: 'Testing Tools',
+                    learn: 'Learn',
+                    snippets: 'Snippets'
+                };
+                const icons = {
+                    json: 'fa-brackets-curly',
+                    playground: 'fa-code',
+                    formatters: 'fa-indent',
+                    minifiers: 'fa-compress',
+                    converters: 'fa-arrows-turn-to-dots',
+                    qr: 'fa-qrcode',
+                    utilities: 'fa-wand-magic-sparkles',
+                    text: 'fa-font',
+                    image: 'fa-image',
+                    base64: 'fa-file-image',
+                    colors: 'fa-palette',
+                    calculators: 'fa-calculator',
+                    testing: 'fa-flask',
+                    learn: 'fa-graduation-cap',
+                    snippets: 'fa-puzzle-piece'
+                };
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-clock-rotate-left"></i> History</div>
+                  ${hist.length === 0 ? '<div class="empty-state"><i class="fas fa-clock"></i><p>No history yet. Start using tools!</p></div>' :
+                    `<div class="tool-grid">${hist.map(id => `
+                      <div class="tool-card" data-tool="${id}">
+                        <i class="fas ${icons[id] || 'fa-cube'}"></i>
+                        <h4>${toolNames[id] || id}</h4>
+                      </div>
+                    `).join('')}</div>`
+                  }
+                  ${hist.length > 0 ? `<div class="btn-group mt-16"><button class="btn btn-outline btn-sm" id="clearHistory"><i class="fas fa-eraser"></i> Clear History</button></div>` : ''}
+                </div>
+              `;
+            }
+
+            // ─── Profile ───
+            function renderProfile() {
+                const p = state.profile;
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-user"></i> Developer Profile</div>
+                  <div class="form-group"><label>Username</label><input type="text" id="profileName" value="${escapeHtml(p.username || 'Developer')}"></div>
+                  <div class="btn-group"><button class="btn btn-primary" id="profileSave"><i class="fas fa-save"></i> Save Profile</button></div>
+                  <div class="mt-16">
+                    <p class="text-sm text-muted"><strong>Favorite Tool:</strong> ${p.favorite || 'None yet'}</p>
+                    <p class="text-sm text-muted"><strong>Total Uses:</strong> ${state.analytics.total || 0}</p>
+                  </div>
+                  <div class="ad-space footer-ad">${renderCarousel('ad-carousel-profile')}</div>
+                </div>
+              `;
+            }
+
+            // ─── Analytics ───
+            function renderAnalytics() {
+                const a = state.analytics;
+                const uses = a.uses || {};
+                const sorted = Object.entries(uses).sort((a, b) => b[1] - a[1]);
+                const toolNames = {
+                    json: 'JSON Formatter',
+                    playground: 'Playground',
+                    formatters: 'Code Formatters',
+                    minifiers: 'Code Minifiers',
+                    converters: 'Converters',
+                    qr: 'QR Generator',
+                    utilities: 'Utilities',
+                    text: 'Text Tools',
+                    image: 'Image Converter',
+                    base64: 'Image to Base64',
+                    colors: 'Color Tools',
+                    calculators: 'Calculators',
+                    testing: 'Testing Tools',
+                    learn: 'Learn',
+                    snippets: 'Snippets',
+                    favorites: 'Favorites',
+                    history: 'History',
+                    profile: 'Profile',
+                    analytics: 'Analytics',
+                    about: 'About',
+                    contact: 'Contact'
+                };
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-chart-simple"></i> Analytics (Local Only)</div>
+                  <div class="grid-2">
+                    <div class="card" style="margin:0;padding:16px;"><span class="text-muted">Total Tool Uses</span><br><strong style="font-size:2rem;">${a.total || 0}</strong></div>
+                    <div class="card" style="margin:0;padding:16px;"><span class="text-muted">Favorite Tool</span><br><strong style="font-size:1.4rem;">${a.favorite ? (toolNames[a.favorite] || a.favorite) : '—'}</strong></div>
+                  </div>
+                  <div class="mt-16">
+                    <h4>Most Used Tools</h4>
+                    ${sorted.length === 0 ? '<p class="text-muted">No data yet.</p>' :
+                      `<ul style="list-style:none;padding:0;">${sorted.slice(0,10).map(([k,v]) => `
+                        <li style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border-color);">
+                          <span>${toolNames[k] || k}</span>
+                          <span class="chip">${v} uses</span>
+                        </li>
+                      `).join('')}</ul>`
+                    }
+                  </div>
+                  <div class="ad-space footer-ad">${renderCarousel('ad-carousel-analytics')}</div>
+                </div>
+              `;
+            }
+
+            // ─── About ───
+            function renderAbout() {
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-circle-info"></i> About</div>
+                  <p><strong>Developer Toolkit</strong> is an all-in-one productivity suite for developers. Everything runs locally in your browser — no data is sent to any server.</p>
+                  <p class="mt-8"><strong>Version:</strong> 2.0</p>
+                  <p class="mt-8"><strong>Purpose:</strong> Provide fast, reliable, and privacy-focused tools for daily development tasks.</p>
+                  <p class="mt-8 text-sm text-muted">All processing happens on your device. No accounts, no cloud, no tracking.</p>
+                  <div class="ad-space footer-ad">${renderCarousel('ad-carousel-about')}</div>
+                </div>
+              `;
+            }
+
+            // ─── Contact ───
+            function renderContact() {
+                return `
+                <div class="card">
+                  <div class="card-title"><i class="fas fa-envelope"></i> Contact</div>
+                  <p>Have feedback or suggestions? Reach out to the developer.</p>
+                  <p class="mt-8"><a href="https://websolutionsza.github.io/websolutionsSA/" target="_blank" rel="noopener" style="font-weight:500;"><i class="fas fa-globe"></i> WebsolutionsSA</a></p>
+                  <p class="text-sm text-muted mt-8">This toolkit is maintained by WebsolutionsSA.</p>
+                  <div class="ad-space footer-ad">${renderCarousel('ad-carousel-contact')}</div>
+                </div>
+              `;
+            }
+
+            // ─── Bind Tool Events ───
+            function bindToolEvents(page) {
+                // Dashboard / Search tool cards
+                document.querySelectorAll('.tool-card[data-tool]').forEach(el => {
+                    el.addEventListener('click', () => navigate(el.dataset.tool));
+                });
+
+                // Search page filter
+                const searchInput = document.getElementById('searchToolsInput');
+                if (searchInput) {
+                    searchInput.addEventListener('input', function() {
+                        const q = this.value.toLowerCase();
+                        document.querySelectorAll('#searchResults .tool-card').forEach(card => {
+                            const label = card.querySelector('h4')?.textContent?.toLowerCase() || '';
+                            const cat = card.querySelector('p')?.textContent?.toLowerCase() || '';
+                            card.style.display = (label.includes(q) || cat.includes(q)) ? '' : 'none';
+                        });
+                    });
+                }
+
+                // Global search
+                if (globalSearch) {
+                    globalSearch.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter') {
+                            const q = this.value.trim().toLowerCase();
+                            if (q) {
+                                const allTools = ['json', 'playground', 'formatters', 'minifiers', 'converters', 'qr',
+                                    'utilities', 'text', 'image', 'base64', 'colors', 'calculators', 'testing', 'learn',
+                                    'snippets', 'favorites', 'history', 'profile', 'analytics', 'about', 'contact'
+                                ];
+                                const match = allTools.find(t => t.includes(q));
+                                if (match) navigate(match);
+                                else toast('No tool found', 'error');
+                            }
+                        }
+                    });
+                }
+
+                // ── JSON ──
+                if (page === 'json') {
+                    const input = document.getElementById('jsonInput');
+                    const output = document.getElementById('jsonOutput');
+                    const status = document.getElementById('jsonStatus');
+                    const formatBtn = document.getElementById('jsonFormat');
+                    const minifyBtn = document.getElementById('jsonMinify');
+                    const validateBtn = document.getElementById('jsonValidate');
+                    const copyBtn = document.getElementById('jsonCopy');
+                    const clearBtn = document.getElementById('jsonClear');
+
+                    const process = (fn) => {
+                        try {
+                            const parsed = JSON.parse(input.value || '{}');
+                            output.value = fn(parsed);
+                            status.innerHTML = '<span style="color:var(--success);">✓ Valid JSON</span>';
+                        } catch (e) {
+                            output.value = '';
+                            status.innerHTML = '<span style="color:var(--danger);">✗ Invalid JSON: ' + escapeHtml(e.message) +
+                                '</span>';
+                        }
+                    };
+                    if (formatBtn) formatBtn.addEventListener('click', () => process(v => JSON.stringify(v, null, 2)));
+                    if (minifyBtn) minifyBtn.addEventListener('click', () => process(v => JSON.stringify(v)));
+                    if (validateBtn) validateBtn.addEventListener('click', () => {
+                        try { JSON.parse(input.value || '{}');
+                            status.innerHTML = '<span style="color:var(--success);">✓ Valid JSON</span>'; } catch (
+                        e) { status.innerHTML = '<span style="color:var(--danger);">✗ Invalid JSON</span>'; }
+                    });
+                    if (copyBtn) copyBtn.addEventListener('click', () => copyToClipboard(output.value));
+                    if (clearBtn) clearBtn.addEventListener('click', () => { input.value = '';
+                        output.value = '';
+                        status.innerHTML = ''; });
+                }
+
+                // ── Playground ──
+                if (page === 'playground') {
+                    const htmlEd = document.getElementById('playHtml');
+                    const cssEd = document.getElementById('playCss');
+                    const jsEd = document.getElementById('playJs');
+                    const preview = document.getElementById('playPreview');
+                    const runBtn = document.getElementById('playRun');
+                    const clearBtn = document.getElementById('playClear');
+
+                    const run = () => {
+                        const html = htmlEd.value || '';
+                        const css = cssEd.value || '';
+                        const js = jsEd.value || '';
+                        const src = `
+                      <style>${css}</style>
+                      ${html}
+                      <script>${js}<\/script>
+                    `;
+                        preview.innerHTML = src;
+                    };
+                    if (runBtn) runBtn.addEventListener('click', run);
+                    if (clearBtn) clearBtn.addEventListener('click', () => { htmlEd.value = '';
+                        cssEd.value = '';
+                        jsEd.value = '';
+                        preview.innerHTML = ''; });
+                    setTimeout(run, 100);
+
+                    document.getElementById('playCopyHtml')?.addEventListener('click', () => copyToClipboard(htmlEd.value));
+                    document.getElementById('playCopyCss')?.addEventListener('click', () => copyToClipboard(cssEd.value));
+                    document.getElementById('playCopyJs')?.addEventListener('click', () => copyToClipboard(jsEd.value));
+                }
+
+                // ── Formatters ──
+                if (page === 'formatters') {
+                    const lang = document.getElementById('formatLang');
+                    const input = document.getElementById('formatInput');
+                    const output = document.getElementById('formatOutput');
+                    const btn = document.getElementById('formatBtn');
+                    const copyBtn = document.getElementById('formatCopy');
+                    const clearBtn = document.getElementById('formatClear');
+
+                    if (btn) btn.addEventListener('click', () => {
+                        const text = input.value || '';
+                        const l = lang.value;
+                        let result = text;
+                        try {
+                            if (l === 'html') result = text.replace(/\s+/g, ' ').trim();
+                            else if (l === 'css') result = text.replace(/\s*{\s*/g, ' {\n').replace(/\s*}\s*/g,
+                                '\n}\n').replace(/;\s*/g, ';\n').replace(/:\s*/g, ': ');
+                            else if (l === 'js') {
+                                try { result = JSON.stringify(JSON.parse(text), null, 2); } catch (e) { result =
+                                        text; }
+                            } else if (l === 'sql') result = text.replace(/select/gi, 'SELECT').replace(/from/gi,
+                                'FROM').replace(/where/gi, 'WHERE').replace(/;/g, ';\n');
+                            else if (l === 'md') result = text.replace(/#/g, '# ').replace(/\*\*/g, '**');
+                            output.value = result;
+                            toast('Formatted!', 'success');
+                        } catch (e) { toast('Format error', 'error');
+                            output.value = text; }
+                    });
+                    if (copyBtn) copyBtn.addEventListener('click', () => copyToClipboard(output.value));
+                    if (clearBtn) clearBtn.addEventListener('click', () => { input.value = '';
+                        output.value = ''; });
+                }
+
+                // ── Minifiers ──
+                if (page === 'minifiers') {
+                    const lang = document.getElementById('minifyLang');
+                    const input = document.getElementById('minifyInput');
+                    const output = document.getElementById('minifyOutput');
+                    const btn = document.getElementById('minifyBtn');
+                    const copyBtn = document.getElementById('minifyCopy');
+                    const clearBtn = document.getElementById('minifyClear');
+
+                    if (btn) btn.addEventListener('click', () => {
+                        const text = input.value || '';
+                        const l = lang.value;
+                        let result = text;
+                        if (l === 'html') result = text.replace(/\s+/g, ' ').trim();
+                        else if (l === 'css') result = text.replace(/\s*{\s*/g, '{').replace(/\s*}\s*/g, '}')
+                            .replace(/;\s*/g, ';').replace(/:\s*/g, ':').replace(/\s+/g, ' ');
+                        else if (l === 'js') {
+                            try { result = JSON.stringify(JSON.parse(text)); } catch (e) { result = text.replace(
+                                    /\s+/g, ' '); }
+                        }
+                        output.value = result;
+                        toast('Minified!', 'success');
+                    });
+                    if (copyBtn) copyBtn.addEventListener('click', () => copyToClipboard(output.value));
+                    if (clearBtn) clearBtn.addEventListener('click', () => { input.value = '';
+                        output.value = ''; });
+                }
+
+                // ── Converters ──
+                if (page === 'converters') {
+                    const type = document.getElementById('convType');
+                    const input = document.getElementById('convInput');
+                    const output = document.getElementById('convOutput');
+                    const btn = document.getElementById('convBtn');
+                    const copyBtn = document.getElementById('convCopy');
+                    const clearBtn = document.getElementById('convClear');
+
+                    if (btn) btn.addEventListener('click', () => {
+                        const text = input.value || '';
+                        const t = type.value;
+                        let result = '';
+                        try {
+                            if (t === 'json2csv') {
+                                const data = JSON.parse(text);
+                                if (Array.isArray(data) && data.length) {
+                                    const headers = Object.keys(data[0]);
+                                    result = headers.join(',') + '\n' + data.map(row => headers.map(h => JSON
+                                        .stringify(row[h] ?? '')).join(',')).join('\n');
+                                } else { result = 'Invalid JSON array'; }
+                            } else if (t === 'csv2json') {
+                                const lines = text.split('\n').filter(l => l.trim());
+                                if (lines.length < 2) { result = 'Invalid CSV'; } else {
+                                    const headers = lines[0].split(',').map(h => h.trim());
+                                    result = JSON.stringify(lines.slice(1).map(line => {
+                                        const vals = line.split(',').map(v => v.trim());
+                                        const obj = {};
+                                        headers.forEach((h, i) => { obj[h] = vals[i] || ''; });
+                                        return obj;
+                                    }), null, 2);
+                                }
+                            } else if (t === 'xml2json') {
+                                result = 'XML to JSON: ' + text.replace(/<[^>]+>/g, ' ').trim();
+                            } else if (t === 'md2html') {
+                                result = text.replace(/#{1,6}\s+(.+)/g, '<h1>$1</h1>').replace(/\*\*(.+)\*\*/g,
+                                    '<strong>$1</strong>').replace(/\n/g, '<br>');
+                            }
+                            output.value = result;
+                            toast('Converted!', 'success');
+                        } catch (e) { toast('Conversion error: ' + e.message, 'error');
+                            output.value = ''; }
+                    });
+                    if (copyBtn) copyBtn.addEventListener('click', () => copyToClipboard(output.value));
+                    if (clearBtn) clearBtn.addEventListener('click', () => { input.value = '';
+                        output.value = ''; });
+                }
+
+                // ── QR ──
+                if (page === 'qr') {
+                    const input = document.getElementById('qrInput');
+                    const wrap = document.getElementById('qrCanvasWrap');
+                    const genBtn = document.getElementById('qrGenerate');
+                    const dlBtn = document.getElementById('qrDownload');
+                    const clrBtn = document.getElementById('qrClear');
+                    let qrCanvas = null;
+
+                    const generate = () => {
+                        const text = input.value || 'https://developer-toolkit.dev';
+                        wrap.innerHTML = '';
+                        const canvas = document.createElement('canvas');
+                        canvas.width = 200;
+                        canvas.height = 200;
+                        const ctx = canvas.getContext('2d');
+                        const size = 200;
+                        const cellSize = 8;
+                        const margin = 16;
+                        const data = text;
+                        ctx.fillStyle = '#fff';
+                        ctx.fillRect(0, 0, size, size);
+                        ctx.fillStyle = '#0f172a';
+                        const seed = (s) => { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s
+                            .charCodeAt(i)) & 0xffffffff; return h; };
+                        const rng = (seed) => { return () => { seed = (seed * 1664525 + 1013904223) & 0xffffffff; return (
+                                seed >>> 0) / 4294967296; }; };
+                        const rand = rng(seed(data) || 42);
+                        const cols = Math.floor((size - margin * 2) / cellSize);
+                        const rows = Math.floor((size - margin * 2) / cellSize);
+                        for (let r = 0; r < rows; r++) {
+                            for (let c = 0; c < cols; c++) {
+                                const val = rand() > 0.45 ? 1 : 0;
+                                if (val) {
+                                    ctx.fillRect(margin + c * cellSize, margin + r * cellSize, cellSize, cellSize);
+                                }
+                            }
+                        }
+                        const drawMarker = (x, y) => {
+                            ctx.fillStyle = '#0f172a';
+                            ctx.fillRect(x, y, 28, 28);
+                            ctx.fillStyle = '#fff';
+                            ctx.fillRect(x + 4, y + 4, 20, 20);
+                            ctx.fillStyle = '#0f172a';
+                            ctx.fillRect(x + 8, y + 8, 12, 12);
+                        };
+                        drawMarker(margin, margin);
+                        drawMarker(size - margin - 28, margin);
+                        drawMarker(margin, size - margin - 28);
+                        qrCanvas = canvas;
+                        wrap.appendChild(canvas);
+                        toast('QR generated!', 'success');
+                    };
+                    if (genBtn) genBtn.addEventListener('click', generate);
+                    if (dlBtn) dlBtn.addEventListener('click', () => {
+                        if (qrCanvas) { const link = document.createElement('a');
+                            link.download = 'qrcode.png';
+                            link.href = qrCanvas.toDataURL('image/png');
+                            link.click(); } else toast('Generate a QR code first', 'error');
+                    });
+                    if (clrBtn) clrBtn.addEventListener('click', () => { wrap.innerHTML = '';
+                        input.value = ''; });
+                    setTimeout(generate, 100);
+                }
+
+                // ── Utilities ──
+                if (page === 'utilities') {
+                    document.querySelectorAll('#utilitiesContainer .tab-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            document.querySelectorAll('#utilitiesContainer .tab-btn').forEach(b => b.classList
+                                .remove('active'));
+                            this.classList.add('active');
+                            const id = this.dataset.tab;
+                            document.querySelectorAll('#utilitiesContainer .tab-pane').forEach(p => p.classList
+                                .remove('active'));
+                            const pane = document.getElementById('tab-' + id);
+                            if (pane) pane.classList.add('active');
+                        });
+                    });
+
+                    const pwGen = document.getElementById('pwGenerate');
+                    const pwOut = document.getElementById('pwOutput');
+                    if (pwGen) pwGen.addEventListener('click', () => {
+                        const len = parseInt(document.getElementById('pwLength')?.value || '16');
+                        const upper = document.getElementById('pwUpper')?.checked;
+                        const lower = document.getElementById('pwLower')?.checked;
+                        const digits = document.getElementById('pwDigits')?.checked;
+                        const symbols = document.getElementById('pwSymbols')?.checked;
+                        let chars = '';
+                        if (upper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                        if (lower) chars += 'abcdefghijklmnopqrstuvwxyz';
+                        if (digits) chars += '0123456789';
+                        if (symbols) chars += '!@#$%^&*()_+-=';
+                        if (!chars) { toast('Select at least one character type', 'error'); return; }
+                        let result = '';
+                        for (let i = 0; i < len; i++) result += chars[Math.floor(Math.random() * chars.length)];
+                        pwOut.value = result;
+                    });
+                    document.getElementById('pwCopy')?.addEventListener('click', () => copyToClipboard(pwOut.value));
+
+                    const randGen = document.getElementById('randGenerate');
+                    const randOut = document.getElementById('randOutput');
+                    if (randGen) randGen.addEventListener('click', () => {
+                        const len = parseInt(document.getElementById('randLength')?.value || '12');
+                        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                        let result = '';
+                        for (let i = 0; i < len; i++) result += chars[Math.floor(Math.random() * chars.length)];
+                        randOut.value = result;
+                    });
+                    document.getElementById('randCopy')?.addEventListener('click', () => copyToClipboard(randOut.value));
+
+                    const tsConv = document.getElementById('tsConvert');
+                    const tsOut = document.getElementById('tsOutput');
+                    if (tsConv) tsConv.addEventListener('click', () => {
+                        const ts = document.getElementById('tsInput')?.value;
+                        const dateInput = document.getElementById('tsDateInput')?.value;
+                        if (ts) {
+                            const d = new Date(parseInt(ts) * 1000);
+                            tsOut.value = d.toString() || 'Invalid';
+                        } else if (dateInput) {
+                            const d = new Date(dateInput);
+                            tsOut.value = Math.floor(d.getTime() / 1000) + ' (' + d.toString() + ')';
+                        } else { tsOut.value = 'Enter a timestamp or date'; }
+                    });
+
+                    const cp = document.getElementById('cpPicker');
+                    const cpHex = document.getElementById('cpHex');
+                    const cpRgb = document.getElementById('cpRgb');
+                    if (cp) cp.addEventListener('input', function() {
+                        cpHex.value = this.value;
+                        const r = parseInt(this.value.slice(1, 3), 16);
+                        const g = parseInt(this.value.slice(3, 5), 16);
+                        const b = parseInt(this.value.slice(5, 7), 16);
+                        cpRgb.value = `rgb(${r},${g},${b})`;
+                    });
+                    document.getElementById('cpCopy')?.addEventListener('click', () => copyToClipboard(cpHex.value));
+
+                    const b64In = document.getElementById('b64Input');
+                    const b64Out = document.getElementById('b64Output');
+                    document.getElementById('b64Encode')?.addEventListener('click', () => {
+                        try { b64Out.value = btoa(unescape(encodeURIComponent(b64In.value || ''))); } catch (
+                        e) { toast('Encode error', 'error'); }
+                    });
+                    document.getElementById('b64Decode')?.addEventListener('click', () => {
+                        try { b64Out.value = decodeURIComponent(escape(atob(b64In.value || ''))); } catch (
+                        e) { toast('Decode error', 'error'); }
+                    });
+                    document.getElementById('b64Copy')?.addEventListener('click', () => copyToClipboard(b64Out.value));
+                }
+
+                // ── Text Tools ──
+                if (page === 'text') {
+                    const input = document.getElementById('textInput');
+                    const output = document.getElementById('textOutput');
+                    const stats = document.getElementById('textStats');
+
+                    const updateStats = () => {
+                        const t = input.value || '';
+                        const words = t.trim() ? t.trim().split(/\s+/).length : 0;
+                        const chars = t.length;
+                        const lines = t.split('\n').length;
+                        stats.innerHTML =
+                            `<span>Words: ${words}</span><span>Characters: ${chars}</span><span>Lines: ${lines}</span>`;
+                    };
+                    input.addEventListener('input', updateStats);
+
+                    document.getElementById('textCount')?.addEventListener('click', updateStats);
+                    document.getElementById('textUpper')?.addEventListener('click', () => { output.value = (input
+                            .value || '').toUpperCase(); });
+                    document.getElementById('textLower')?.addEventListener('click', () => { output.value = (input
+                            .value || '').toLowerCase(); });
+                    document.getElementById('textTitle')?.addEventListener('click', () => {
+                        output.value = (input.value || '').replace(/\b\w/g, c => c.toUpperCase());
+                    });
+                    document.getElementById('textTrim')?.addEventListener('click', () => {
+                        output.value = (input.value || '').replace(/\s+/g, ' ').trim();
+                    });
+                    document.getElementById('textClean')?.addEventListener('click', () => {
+                        output.value = (input.value || '').replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, ' ')
+                            .trim();
+                    });
+                    document.getElementById('textCopy')?.addEventListener('click', () => copyToClipboard(output
+                    .value));
+                    document.getElementById('textClear')?.addEventListener('click', () => { input.value = '';
+                        output.value = '';
+                        updateStats(); });
+                    updateStats();
+                }
+
+                // ── Image Converter ──
+                if (page === 'image') {
+                    const upload = document.getElementById('imgUpload');
+                    const preview = document.getElementById('imgPreview');
+                    const info = document.getElementById('imgInfo');
+                    const format = document.getElementById('imgFormat');
+                    const quality = document.getElementById('imgQuality');
+                    const qLabel = document.getElementById('imgQualityLabel');
+                    let currentFile = null;
+                    let currentDataUrl = null;
+
+                    if (quality) quality.addEventListener('input', function() {
+                        if (qLabel) qLabel.textContent = this.value + '%';
+                    });
+
+                    if (upload) upload.addEventListener('change', function(e) {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        currentFile = file;
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            currentDataUrl = ev.target.result;
+                            preview.src = ev.target.result;
+                            preview.style.display = 'block';
+                            const img = new Image();
+                            img.onload = function() {
+                                info.innerHTML =
+                                    `<span>File: ${escapeHtml(file.name)}</span><span>Size: ${formatBytes(file.size)}</span><span>Dimensions: ${img.width}×${img.height}</span>`;
+                            };
+                            img.src = ev.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    });
+
+                    document.getElementById('imgConvertBtn')?.addEventListener('click', function() {
+                        if (!currentDataUrl) { toast('Upload an image first', 'error'); return; }
+                        const fmt = format.value;
+                        const q = parseInt(quality.value || '80') / 100;
+                        const img = new Image();
+                        img.onload = function() {
+                            const canvas = document.createElement('canvas');
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0);
+                            const mime = fmt;
+                            const data = canvas.toDataURL(mime, q);
+                            currentDataUrl = data;
+                            preview.src = data;
+                            toast('Converted!', 'success');
+                        };
+                        img.src = currentDataUrl;
+                    });
+
+                    document.getElementById('imgDownload')?.addEventListener('click', function() {
+                        if (!currentDataUrl) { toast('No image to download', 'error'); return; }
+                        const ext = format.value.split('/')[1] || 'png';
+                        const link = document.createElement('a');
+                        link.download = 'converted.' + ext;
+                        link.href = currentDataUrl;
+                        link.click();
+                    });
+
+                    document.getElementById('imgClear')?.addEventListener('click', function() {
+                        if (upload) upload.value = '';
+                        preview.style.display = 'none';
+                        preview.src = '';
+                        info.innerHTML =
+                            '<span>File: -</span><span>Size: -</span><span>Dimensions: -</span>';
+                        currentFile = null;
+                        currentDataUrl = null;
+                    });
+                }
+
+                // ── Base64 Image ──
+                if (page === 'base64') {
+                    const upload = document.getElementById('b64Upload');
+                    const preview = document.getElementById('b64Preview');
+                    const info = document.getElementById('b64Info');
+                    const output = document.getElementById('b64OutputImg');
+                    const formatSel = document.getElementById('b64Format');
+                    let currentFile = null;
+                    let currentBase64 = '';
+
+                    if (upload) upload.addEventListener('change', function(e) {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        currentFile = file;
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            const dataUrl = ev.target.result;
+                            preview.src = dataUrl;
+                            preview.style.display = 'block';
+                            const img = new Image();
+                            img.onload = function() {
+                                info.innerHTML =
+                                    `<span>File: ${escapeHtml(file.name)}</span><span>Size: ${formatBytes(file.size)}</span><span>Dimensions: ${img.width}×${img.height}</span>`;
+                            };
+                            img.src = dataUrl;
+                            const raw = dataUrl.split(',')[1] || '';
+                            currentBase64 = raw;
+                            const fmt = formatSel.value;
+                            output.value = fmt === 'full' ? dataUrl : raw;
+                        };
+                        reader.readAsDataURL(file);
+                    });
+
+                    document.getElementById('b64ConvertImg')?.addEventListener('click', function() {
+                        if (!currentFile) { toast('Upload an image first', 'error'); return; }
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            const dataUrl = ev.target.result;
+                            const raw = dataUrl.split(',')[1] || '';
+                            currentBase64 = raw;
+                            const fmt = formatSel.value;
+                            output.value = fmt === 'full' ? dataUrl : raw;
+                            toast('Converted to Base64!', 'success');
+                        };
+                        reader.readAsDataURL(currentFile);
+                    });
+
+                    document.getElementById('b64CopyImg')?.addEventListener('click', () => copyToClipboard(output
+                        .value));
+                    document.getElementById('b64DownloadImg')?.addEventListener('click', function() {
+                        if (!output.value) { toast('Convert an image first', 'error'); return; }
+                        downloadFile(output.value, 'base64-output.txt', 'text/plain');
+                    });
+                    document.getElementById('b64ClearImg')?.addEventListener('click', function() {
+                        if (upload) upload.value = '';
+                        preview.style.display = 'none';
+                        preview.src = '';
+                        info.innerHTML =
+                            '<span>File: -</span><span>Size: -</span><span>Dimensions: -</span>';
+                        output.value = '';
+                        currentFile = null;
+                        currentBase64 = '';
+                    });
+                }
+
+                // ── Color Tools ──
+                if (page === 'colors') {
+                    document.querySelectorAll('#colorsContainer .tab-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            document.querySelectorAll('#colorsContainer .tab-btn').forEach(b => b.classList
+                                .remove('active'));
+                            this.classList.add('active');
+                            const id = this.dataset.tab;
+                            document.querySelectorAll('#colorsContainer .tab-pane').forEach(p => p.classList
+                                .remove('active'));
+                            const pane = document.getElementById('tab-' + id);
+                            if (pane) pane.classList.add('active');
+                        });
+                    });
+
+                    const hexIn = document.getElementById('colorHex');
+                    const rgbOut = document.getElementById('colorRgb');
+                    const swatch = document.getElementById('colorSwatch');
+                    const convBtn = document.getElementById('colorConvert');
+                    if (convBtn) convBtn.addEventListener('click', function() {
+                        const hex = hexIn.value.trim();
+                        if (/^#[0-9a-f]{6}$/i.test(hex)) {
+                            const r = parseInt(hex.slice(1, 3), 16);
+                            const g = parseInt(hex.slice(3, 5), 16);
+                            const b = parseInt(hex.slice(5, 7), 16);
+                            rgbOut.value = `rgb(${r}, ${g}, ${b})`;
+                            if (swatch) swatch.style.background = hex;
+                            toast('Converted!', 'success');
+                        } else { toast('Invalid HEX (use #rrggbb)', 'error'); }
+                    });
+                    document.getElementById('colorCopy')?.addEventListener('click', () => copyToClipboard(hexIn
+                    .value));
+
+                    const grad1 = document.getElementById('gradColor1');
+                    const grad2 = document.getElementById('gradColor2');
+                    const gradDir = document.getElementById('gradDir');
+                    const gradPreview = document.getElementById('gradPreview');
+                    const gradOutput = document.getElementById('gradOutput');
+                    document.getElementById('gradGenerate')?.addEventListener('click', function() {
+                        const c1 = grad1.value;
+                        const c2 = grad2.value;
+                        const dir = gradDir.value;
+                        const css = `background: linear-gradient(${dir}, ${c1}, ${c2});`;
+                        if (gradPreview) gradPreview.style.background = `linear-gradient(${dir}, ${c1}, ${c2})`;
+                        if (gradOutput) gradOutput.value = css;
+                    });
+                    document.getElementById('gradCopy')?.addEventListener('click', () => copyToClipboard(gradOutput
+                        .value));
+
+                    document.getElementById('palGenerate')?.addEventListener('click', function() {
+                        const base = document.getElementById('palBase').value;
+                        const wrap = document.getElementById('palSwatches');
+                        wrap.innerHTML = '';
+                        const colors = [];
+                        for (let i = 0; i < 5; i++) {
+                            const r = parseInt(base.slice(1, 3), 16);
+                            const g = parseInt(base.slice(3, 5), 16);
+                            const b = parseInt(base.slice(5, 7), 16);
+                            const factor = 0.2 + i * 0.2;
+                            const nr = Math.min(255, Math.round(r + (255 - r) * factor));
+                            const ng = Math.min(255, Math.round(g + (255 - g) * factor));
+                            const nb = Math.min(255, Math.round(b + (255 - b) * factor));
+                            const hex = '#' + [nr, ng, nb].map(c => c.toString(16).padStart(2, '0')).join('');
+                            colors.push(hex);
+                        }
+                        colors.forEach(c => {
+                            const sw = document.createElement('div');
+                            sw.className = 'swatch';
+                            sw.style.background = c;
+                            sw.title = c;
+                            sw.addEventListener('click', () => copyToClipboard(c));
+                            wrap.appendChild(sw);
+                        });
+                        toast('Palette generated!', 'success');
+                    });
+                    document.getElementById('palCopy')?.addEventListener('click', function() {
+                        const swatches = document.querySelectorAll('#palSwatches .swatch');
+                        const hexes = Array.from(swatches).map(el => el.style.background || el.title).filter(Boolean)
+                            .join(' ');
+                        if (hexes) copyToClipboard(hexes);
+                        else toast('Generate a palette first', 'error');
+                    });
+                }
+
+                // ── Calculators ──
+                if (page === 'calculators') {
+                    document.querySelectorAll('#calcContainer .tab-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            document.querySelectorAll('#calcContainer .tab-btn').forEach(b => b.classList
+                                .remove('active'));
+                            this.classList.add('active');
+                            const id = this.dataset.tab;
+                            document.querySelectorAll('#calcContainer .tab-pane').forEach(p => p.classList
+                                .remove('active'));
+                            const pane = document.getElementById('tab-' + id);
+                            if (pane) pane.classList.add('active');
+                        });
+                    });
+
+                    document.getElementById('pctCalc')?.addEventListener('click', function() {
+                        const val = parseFloat(document.getElementById('pctVal').value) || 0;
+                        const pct = parseFloat(document.getElementById('pctPct').value) || 0;
+                        document.getElementById('pctResult').value = (val * pct / 100).toFixed(2);
+                    });
+                    document.getElementById('fsCalc')?.addEventListener('click', function() {
+                        const bytes = parseFloat(document.getElementById('fsBytes').value) || 0;
+                        document.getElementById('fsResult').value = formatBytes(bytes);
+                    });
+                    document.getElementById('timeCalc')?.addEventListener('click', function() {
+                        const sec = parseFloat(document.getElementById('timeSec').value) || 0;
+                        const h = Math.floor(sec / 3600);
+                        const m = Math.floor((sec % 3600) / 60);
+                        const s = Math.floor(sec % 60);
+                        document.getElementById('timeResult').value =
+                            `${h}h ${m}m ${s}s (${sec.toFixed(0)} seconds)`;
+                    });
+                    document.getElementById('unitCalc')?.addEventListener('click', function() {
+                        const val = parseFloat(document.getElementById('unitVal').value) || 0;
+                        const from = document.getElementById('unitFrom').value;
+                        const to = document.getElementById('unitTo').value;
+                        const base = { px: 1, rem: 16, em: 16, pt: 1.333, cm: 37.8, in: 96 };
+                        if (base[from] && base[to]) {
+                            const result = val * base[from] / base[to];
+                            document.getElementById('unitResult').value = result.toFixed(4) + ' ' + to;
+                        }
+                    });
+                    document.getElementById('ageCalc')?.addEventListener('click', function() {
+                        const dob = document.getElementById('ageDob').value;
+                        if (!dob) { toast('Select a date', 'error'); return; }
+                        const born = new Date(dob);
+                        const now = new Date();
+                        let years = now.getFullYear() - born.getFullYear();
+                        let months = now.getMonth() - born.getMonth();
+                        if (months < 0) { years--;
+                            months += 12; }
+                        let days = now.getDate() - born.getDate();
+                        if (days < 0) { months--;
+                            days += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
+                        document.getElementById('ageResult').value =
+                            `${years} years, ${months} months, ${days} days`;
+                    });
+                }
+
+                // ── Testing Tools ──
+                if (page === 'testing') {
+                    document.querySelectorAll('#testContainer .tab-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            document.querySelectorAll('#testContainer .tab-btn').forEach(b => b.classList
+                                .remove('active'));
+                            this.classList.add('active');
+                            const id = this.dataset.tab;
+                            document.querySelectorAll('#testContainer .tab-pane').forEach(p => p.classList
+                                .remove('active'));
+                            const pane = document.getElementById('tab-' + id);
+                            if (pane) pane.classList.add('active');
+                        });
+                    });
+
+                    const urlIn = document.getElementById('urlInput');
+                    const urlOut = document.getElementById('urlOutput');
+                    document.getElementById('urlEncode')?.addEventListener('click', () => { urlOut.value = encodeURIComponent(
+                            urlIn.value || ''); });
+                    document.getElementById('urlDecode')?.addEventListener('click', () => { try { urlOut.value =
+                            decodeURIComponent(urlIn.value || ''); } catch (e) { toast('Invalid URL encoding',
+                            'error'); } });
+                    document.getElementById('urlCopy')?.addEventListener('click', () => copyToClipboard(urlOut
+                    .value));
+
+                    const htmlIn = document.getElementById('htmlInput');
+                    const htmlOut = document.getElementById('htmlOutput');
+                    document.getElementById('htmlEncode')?.addEventListener('click', () => { htmlOut.value = escapeHtml(
+                            htmlIn.value || ''); });
+                    document.getElementById('htmlDecode')?.addEventListener('click', () => {
+                        const txt = document.createElement('textarea');
+                        txt.innerHTML = htmlIn.value || '';
+                        htmlOut.value = txt.value;
+                    });
+                    document.getElementById('htmlCopy')?.addEventListener('click', () => copyToClipboard(htmlOut
+                        .value));
+
+                    document.getElementById('regexTestBtn')?.addEventListener('click', function() {
+                        const pattern = document.getElementById('regexPattern').value;
+                        const flags = document.getElementById('regexFlags').value;
+                        const test = document.getElementById('regexTest').value;
+                        try {
+                            const re = new RegExp(pattern, flags);
+                            const matches = test.match(re);
+                            document.getElementById('regexOutput').value = matches ? matches.join('\n') :
+                                'No matches';
+                        } catch (e) { document.getElementById('regexOutput').value = 'Error: ' + e.message; }
+                    });
+
+                    document.getElementById('diffBtn')?.addEventListener('click', function() {
+                        const a = document.getElementById('diffA').value || '';
+                        const b = document.getElementById('diffB').value || '';
+                        const out = document.getElementById('diffOutput');
+                        if (a === b) {
+                            out.innerHTML = '<div class="text-muted">Texts are identical.</div>';
+                            return;
+                        }
+                        out.innerHTML = `
+                      <div><strong>Text A</strong><pre class="diff-removed">${escapeHtml(a)}</pre></div>
+                      <div><strong>Text B</strong><pre class="diff-added">${escapeHtml(b)}</pre></div>
+                    `;
+                    });
+                }
+
+                // ── Snippets ──
+                if (page === 'snippets') {
+                    const renderSnippetList = () => {
+                        const list = document.getElementById('snippetList');
+                        const items = state.snippets || [];
+                        if (items.length === 0) {
+                            list.innerHTML =
+                                '<div class="empty-state"><i class="fas fa-puzzle-piece"></i><p>No snippets saved yet.</p></div>';
+                            return;
+                        }
+                        list.innerHTML = items.map((s, i) => `
+                      <div class="snippet-item" data-index="${i}">
+                        <div class="snippet-info">
+                          <h4>${escapeHtml(s.title || 'Untitled')}</h4>
+                          ${s.desc ? `<p>${escapeHtml(s.desc)}</p>` : ''}
+                          <code>${escapeHtml(s.code || '')}</code>
+                        </div>
+                        <div class="snippet-actions">
+                          <button class="btn btn-sm btn-outline snippetCopy" data-code="${escapeHtml(s.code || '')}"><i class="fas fa-copy"></i></button>
+                          <button class="btn btn-sm btn-danger snippetDelete" data-index="${i}"><i class="fas fa-trash"></i></button>
+                        </div>
+                      </div>
+                    `).join('');
+                        list.querySelectorAll('.snippetCopy').forEach(el => {
+                            el.addEventListener('click', function() { copyToClipboard(this.dataset.code); });
+                        });
+                        list.querySelectorAll('.snippetDelete').forEach(el => {
+                            el.addEventListener('click', function() {
+                                const idx = parseInt(this.dataset.index);
+                                if (confirm('Delete this snippet?')) {
+                                    state.snippets.splice(idx, 1);
+                                    localStorage.setItem('devkit-snippets', JSON.stringify(state.snippets));
+                                    renderSnippetList();
+                                    toast('Snippet deleted', 'info');
+                                }
+                            });
+                        });
+                    };
+
+                    document.getElementById('snippetSave')?.addEventListener('click', function() {
+                        const title = document.getElementById('snippetTitle').value.trim() || 'Untitled';
+                        const desc = document.getElementById('snippetDesc').value.trim();
+                        const code = document.getElementById('snippetCode').value;
+                        if (!code) { toast('Enter some code', 'error'); return; }
+                        state.snippets.push({ title, desc, code });
+                        localStorage.setItem('devkit-snippets', JSON.stringify(state.snippets));
+                        document.getElementById('snippetTitle').value = '';
+                        document.getElementById('snippetDesc').value = '';
+                        document.getElementById('snippetCode').value = '';
+                        renderSnippetList();
+                        toast('Snippet saved!', 'success');
+                    });
+
+                    document.getElementById('snippetSearchBtn')?.addEventListener('click', function() {
+                        const q = (document.getElementById('snippetSearch').value || '').toLowerCase();
+                        const items = state.snippets || [];
+                        const list = document.getElementById('snippetList');
+                        if (!q) { renderSnippetList(); return; }
+                        const filtered = items.filter(s => (s.title || '').toLowerCase().includes(q) || (s
+                            .desc || '').toLowerCase().includes(q) || (s.code || '').toLowerCase().includes(
+                        q));
+                        if (filtered.length === 0) {
+                            list.innerHTML =
+                                '<div class="empty-state"><i class="fas fa-search"></i><p>No matching snippets.</p></div>';
+                        } else {
+                            list.innerHTML = filtered.map((s, i) => `
+                        <div class="snippet-item">
+                          <div class="snippet-info">
+                            <h4>${escapeHtml(s.title || 'Untitled')}</h4>
+                            ${s.desc ? `<p>${escapeHtml(s.desc)}</p>` : ''}
+                            <code>${escapeHtml(s.code || '')}</code>
+                          </div>
+                          <div class="snippet-actions">
+                            <button class="btn btn-sm btn-outline snippetCopy" data-code="${escapeHtml(s.code || '')}"><i class="fas fa-copy"></i></button>
+                          </div>
+                        </div>
+                      `).join('');
+                            list.querySelectorAll('.snippetCopy').forEach(el => {
+                                el.addEventListener('click', function() { copyToClipboard(this.dataset
+                                        .code); });
+                            });
+                        }
+                    });
+                    renderSnippetList();
+                }
+
+                // ── Favorites ──
+                if (page === 'favorites') {
+                    document.querySelectorAll('.unfavorite-btn').forEach(el => {
+                        el.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            const tool = this.dataset.tool;
+                            removeFavorite(tool);
+                            renderPage('favorites');
+                        });
+                    });
+                }
+
+                // ── History ──
+                if (page === 'history') {
+                    document.getElementById('clearHistory')?.addEventListener('click', function() {
+                        if (confirm('Clear all history?')) {
+                            state.history = [];
+                            localStorage.setItem('devkit-history', JSON.stringify(state.history));
+                            renderPage('history');
+                            toast('History cleared', 'info');
+                        }
+                    });
+                }
+
+                // ── Profile ──
+                if (page === 'profile') {
+                    document.getElementById('profileSave')?.addEventListener('click', function() {
+                        const name = document.getElementById('profileName').value.trim() || 'Developer';
+                        state.profile.username = name;
+                        localStorage.setItem('devkit-profile', JSON.stringify(state.profile));
+                        toast('Profile saved!', 'success');
+                        renderPage('profile');
+                    });
+                }
+
+                // ── Learn copy ──
+                document.querySelectorAll('.learnCopy').forEach(el => {
+                    el.addEventListener('click', function() { copyToClipboard(this.dataset.code); });
+                });
+            }
+
+            // ─── Init ───
+            function init() {
+                setTheme(state.theme);
+
+                if (state.cookieConsent === null) {
+                    cookieBanner.style.display = 'flex';
+                } else {
+                    cookieBanner.style.display = 'none';
+                }
+                document.getElementById('cookieAccept')?.addEventListener('click', function() {
+                    localStorage.setItem('devkit-cookie-consent', 'accepted');
+                    cookieBanner.style.display = 'none';
+                    toast('Cookies accepted', 'success');
+                });
+                document.getElementById('cookieDecline')?.addEventListener('click', function() {
+                    localStorage.setItem('devkit-cookie-consent', 'declined');
+                    cookieBanner.style.display = 'none';
+                    toast('Cookies declined', 'info');
+                });
+
+                document.querySelectorAll('.sidebar-nav a').forEach(el => {
+                    el.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        navigate(this.dataset.page);
+                    });
+                });
+
+                menuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('open');
+                    overlay.classList.toggle('show');
+                });
+                overlay.addEventListener('click', function() {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('show');
+                });
+
+                themeToggle.addEventListener('click', function() {
+                    setTheme(state.theme === 'dark' ? 'light' : 'dark');
+                });
+
+                let deferredPrompt = null;
+                window.addEventListener('beforeinstallprompt', function(e) {
+                    e.preventDefault();
+                    deferredPrompt = e;
+                    document.getElementById('installBtn').style.display = 'flex';
+                });
+                document.getElementById('installBtn').addEventListener('click', function() {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        deferredPrompt.userChoice.then(function(choice) {
+                            if (choice.outcome === 'accepted') {
+                                toast('App installed!', 'success');
+                            } else {
+                                toast('Installation declined', 'info');
+                            }
+                            deferredPrompt = null;
+                            document.getElementById('installBtn').style.display = 'none';
+                        });
+                    } else {
+                        const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                        if (isIos) {
+                            toast('Tap Share then "Add to Home Screen"', 'info');
+                        } else {
+                            toast('Use browser\'s "Install" or "Add to Home Screen"', 'info');
+                        }
+                    }
+                });
+                if (!deferredPrompt && !/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+                    document.getElementById('installBtn').style.display = 'none';
+                }
+
+                navigate('dashboard');
+
+                setInterval(() => {
+                    state.analytics.time = (state.analytics.time || 0) + 1;
+                    localStorage.setItem('devkit-analytics', JSON.stringify(state.analytics));
+                }, 60000);
+
+                document.addEventListener('keydown', function(e) {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                        e.preventDefault();
+                        globalSearch.focus();
+                    }
+                    if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+                        sidebar.classList.remove('open');
+                        overlay.classList.remove('show');
+                    }
+                });
+
+                console.log('Developer Toolkit v2.0 loaded.');
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+
+        })();
+    </script>
+</body>
+</html>
